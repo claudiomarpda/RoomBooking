@@ -1,0 +1,180 @@
+C:\Program Files\MySQL\MySQL Server 5.7\bin
+mysql -u root -p room_booking
+
+CREATE TABLE `room_booking`.`new_table` (
+  `id_user_type` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `description` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_user_type`));
+
+  ALTER TABLE `room_booking`.`new_table` 
+RENAME TO  `room_booking`.`user_type` ;
+
+CREATE TABLE `room_booking`.`person` (
+  `cpf` CHAR(11) NOT NULL,
+  `name` VARCHAR(200) NULL,
+  `birth` DATE NULL,
+  PRIMARY KEY (`cpf`));
+
+  CREATE TABLE `room_booking`.`user` (
+  `id_user` VARCHAR(20) NOT NULL,
+  `cpf` CHAR(11) NULL,
+  `user_type` INT UNSIGNED NULL,
+  PRIMARY KEY (`id_user`),
+  INDEX `user_type_idx` (`user_type` ASC),
+  CONSTRAINT `user_type`
+    FOREIGN KEY (`user_type`)
+    REFERENCES `room_booking`.`user_type` (`id_user_type`)
+    ON DELETE SET NULL
+    ON UPDATE NO ACTION);
+
+ALTER TABLE `room_booking`.`person` 
+ADD COLUMN `gender` VARCHAR(20) NULL AFTER `name`;
+
+ALTER TABLE `room_booking`.`person` 
+CHANGE COLUMN `gender` `gender` CHAR(1) NULL DEFAULT NULL ;
+
+alter table person add constraint gender check(gender in ('M', 'F'));
+
+select * from person where gender = 'M';
+
+insert into user_type (id_user_type, description) values (NULL, "Professor");
+insert into person values ('11111111111', 'Thiago Maritan Ugulino Araújo', 'M', str_to_date('01,01,1980', '%d, %m, %Y'));
+insert into user values('2016000000', '11111111111', 1);
+
+CREATE TABLE `room_booking`.`phone` (
+  `cpf` CHAR(11) NOT NULL,
+  `number` VARCHAR(20) NULL,
+    FOREIGN KEY (cpf)
+    REFERENCES `room_booking`.`person` (cpf)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+insert into phone values('11111111111', '+55 083 91111-2222');
+
+ALTER TABLE `room_booking`.`phone` 
+DROP FOREIGN KEY `phone_ibfk_1`;
+ALTER TABLE `room_booking`.`phone` 
+ADD CONSTRAINT `phone_ibfk_1`
+  FOREIGN KEY (`cpf`)
+  REFERENCES `room_booking`.`person` (`cpf`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION;
+
+
+CREATE TABLE `room_booking`.`room_type` (
+  `id_room_type` VARCHAR(5) NOT NULL,
+  `description` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_room_type`));
+
+insert into room_type values ('LAB', 'Laboratório');
+
+CREATE TABLE room (
+  id_sala VARCHAR(15) NOT NULL,
+  room_type VARCHAR(5),
+  FOREIGN KEY(room_type)
+  REFERENCES room_type(id_room_type)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION,
+  capacity INT,
+  has_projector TINYINT(1),
+  num_computers INT
+);
+
+insert into room values ('LAB101', 'LAB', 40, 1, 30);
+
+CREATE TABLE floor (
+  id_floor INT NOT NULL AUTO_INCREMENT,
+  description VARCHAR(30),
+  PRIMARY KEY(id_floor)
+);
+
+ALTER TABLE floor
+MODIFY id_floor TINYINT;
+
+ALTER TABLE `room_booking`.`user` 
+DROP FOREIGN KEY `user_type`;
+
+ALTER TABLE `room_booking`.`user` 
+ADD CONSTRAINT `user_type`
+  FOREIGN KEY (`user_type`)
+  REFERENCES `room_booking`.`user_type` (`id_user_type`)
+  ON DELETE NO ACTION
+  ON UPDATE CASCADE;
+
+ALTER TABLE user_type
+MODIFY id_user_type TINYINT UNSIGNED;
+
+ALTER TABLE `room_booking`.`user_type` 
+CHANGE COLUMN `id_user_type` `id_user_type` TINYINT(4) UNSIGNED NOT NULL ;
+
+ALTER TABLE floor
+MODIFY description VARCHAR(36);
+
+ALTER TABLE `room_booking`.`room` 
+ADD COLUMN `floor` TINYINT(4) NULL AFTER `room_type`,
+ADD INDEX `floor_idx` (`floor` ASC);
+ALTER TABLE `room_booking`.`room` 
+ADD CONSTRAINT `floor`
+  FOREIGN KEY (`floor`)
+  REFERENCES `room_booking`.`floor` (`id_floor`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `room_booking`.`room` 
+DROP FOREIGN KEY `room_ibfk_1`;
+ALTER TABLE `room_booking`.`room` 
+CHANGE COLUMN `id_sala` `id_room` VARCHAR(15) NOT NULL ;
+ALTER TABLE `room_booking`.`room` 
+ADD CONSTRAINT `room_fk`
+  FOREIGN KEY (`room_type`)
+  REFERENCES `room_booking`.`room_type` (`id_room_type`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION;
+
+
+ALTER TABLE `room_booking`.`room` 
+DROP FOREIGN KEY `room_fk`;
+ALTER TABLE `room_booking`.`room` 
+DROP INDEX `room_fk` ,
+ADD INDEX `room_type_fk` (`room_type` ASC),
+ADD PRIMARY KEY (`id_room`);
+ALTER TABLE `room_booking`.`room` 
+ADD CONSTRAINT `room_type_fk`
+  FOREIGN KEY (`room_type`)
+  REFERENCES `room_booking`.`room_type` (`id_room_type`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION;
+
+CREATE TABLE `room_booking`.`booking` (
+  `id_booking` INT NOT NULL AUTO_INCREMENT,
+  `user` VARCHAR(20) NULL,
+  `room` VARCHAR(15) NULL,
+  `goal` TINYTEXT NULL,
+  `num_people` TINYINT NULL,
+  INDEX `room_fk_idx` (`room` ASC),
+  PRIMARY KEY (`id_booking`),
+  INDEX `user_fk_idx` (`user` ASC),
+  CONSTRAINT `room_fk`
+    FOREIGN KEY (`room`)
+    REFERENCES `room_booking`.`room` (`id_room`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `user_fk`
+    FOREIGN KEY (`user`)
+    REFERENCES `room_booking`.`user` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+ALTER TABLE `room_booking`.`booking` 
+ADD COLUMN `date_time` DATETIME NULL DEFAULT NULL AFTER `num_people`;
+
+insert into floor values(1, 'Primeiro andar');
+update room set floor=1;
+insert into booking values('2016000000', 'LAB101', 'To crack the code interview.', 4, insert into mytime values(STR_TO_DATE('2016-10-24 02:01:01 PM', '%Y-%m-%d %h:%i:%s %p')););
+insert into mytime values(STR_TO_DATE('10/24/11 10:00 PM', '%m/%d/%Y %h:%i %p'));
+
+insert into mytime values(str_to_date('10/25/2016 02:01:50 PM', '%m/%d/%Y %h:%i:%s %p'));
+insert into mytime values(str_to_date('2016-10-24 0:25:03 PM', '%Y/%m/%d %h:%i:%s %p'));
+
+
