@@ -9,6 +9,7 @@ public abstract class Person {
     protected char gender;
     protected Date birth;
     protected ArrayList<String> phoneNumberList;
+    protected String email;
 
     public Person(String cpf, String name, char gender, Date birth, ArrayList<String> phoneNumberList) {
         this.cpf = cpf;
@@ -57,6 +58,13 @@ public abstract class Person {
     public void setPhoneNumberList(ArrayList<String> phoneNumberList) {
         this.phoneNumberList = phoneNumberList;
     }
-    
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
     
 }

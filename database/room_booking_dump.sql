@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.16, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: room_booking
 -- ------------------------------------------------------
@@ -48,6 +48,31 @@ INSERT INTO `booking` VALUES (1,'2016000000','LAB101','To crack the code intervi
 UNLOCK TABLES;
 
 --
+-- Table structure for table `email`
+--
+
+DROP TABLE IF EXISTS `email`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `email` (
+  `cpf` char(11) NOT NULL,
+  `address` tinytext,
+  KEY `cpf` (`cpf`),
+  CONSTRAINT `email_ibfk_1` FOREIGN KEY (`cpf`) REFERENCES `person` (`cpf`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `email`
+--
+
+LOCK TABLES `email` WRITE;
+/*!40000 ALTER TABLE `email` DISABLE KEYS */;
+INSERT INTO `email` VALUES ('11111111111','th@email.com');
+/*!40000 ALTER TABLE `email` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `floor`
 --
 
@@ -72,28 +97,6 @@ INSERT INTO `floor` VALUES (1,'Primeiro andar');
 UNLOCK TABLES;
 
 --
--- Table structure for table `mytime`
---
-
-DROP TABLE IF EXISTS `mytime`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mytime` (
-  `my_time` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mytime`
---
-
-LOCK TABLES `mytime` WRITE;
-/*!40000 ALTER TABLE `mytime` DISABLE KEYS */;
-INSERT INTO `mytime` VALUES ('2016-10-24 14:00:00'),('2016-10-25 14:01:50'),('2011-10-24 22:00:00'),('2016-10-24 22:00:00'),('2016-10-24 22:00:00'),('2016-10-24 15:00:00'),('2016-10-24 17:00:00'),('2016-10-24 13:00:00'),('2016-10-24 13:00:22'),('2016-10-24 15:00:22');
-/*!40000 ALTER TABLE `mytime` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `person`
 --
 
@@ -115,7 +118,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('11111111111','Thiago Maritan Ugulino Araújo','M','1980-01-01');
+INSERT INTO `person` VALUES ('11111111111','Thiago Maritan Ugulino Araújo','M','1980-01-01'),('2','Jonathan','M','2016-12-12'),('2016111111','Jonathan','M','2016-12-12'),('33333333333','Jonathan','M','1994-01-01');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -259,4 +262,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-25 20:32:52
+-- Dump completed on 2016-10-26 23:54:52
