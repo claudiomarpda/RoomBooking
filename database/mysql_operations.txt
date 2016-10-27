@@ -178,3 +178,23 @@ insert into mytime values(str_to_date('10/25/2016 02:01:50 PM', '%m/%d/%Y %h:%i:
 insert into mytime values(str_to_date('2016-10-24 0:25:03 PM', '%Y/%m/%d %h:%i:%s %p'));
 
 
+ALTER TABLE `room_booking`.`user` 
+ADD COLUMN `email` TINYTEXT NULL DEFAULT NULL AFTER `user_type`;
+
+UPDATE user SET email='tm@email.com' WHERE id_user = '2016000000';
+
+CREATE TABLE email (
+  cpf CHAR(11) NOT NULL,
+    description TINYTEXT,
+    FOREIGN KEY(cpf)
+    REFERENCES person(cpf)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+);
+
+ALTER TABLE `room_booking`.`email` 
+CHANGE COLUMN `description` `address` TINYTEXT NULL DEFAULT NULL ;
+
+ALTER TABLE `room_booking`.`user` 
+DROP COLUMN `email`;
+
