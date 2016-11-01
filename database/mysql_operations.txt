@@ -198,3 +198,7 @@ CHANGE COLUMN `description` `address` TINYTEXT NULL DEFAULT NULL ;
 ALTER TABLE `room_booking`.`user` 
 DROP COLUMN `email`;
 
+DELETE FROM person WHERE cpf = "22222222222";
+DELETE FROM phone WHERE cpf = "...";
+DELETE FROM email WHERE cpf = "22222222222";
+git commit -m "Create UserType, User, Room and Booking"
