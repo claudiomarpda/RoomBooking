@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +24,7 @@ import java.util.logging.Logger;
  */
 public final class DatabaseHelper {
 
-    private static Connection mConnection;
+    private Connection mConnection;
     private static final String URL = "jdbc:mysql://localhost:3306/room_booking";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "mysql";
@@ -72,6 +74,7 @@ public final class DatabaseHelper {
 
     // Booking table
     private static final String BOOKING = "booking";
+    private static final String BOOKING_ID = "id_booking";
     private static final String GOAL = "goal";
     private static final String NUM_PEOPLE = "num_people";
     private static final String DATE_TIME = "date_time";
@@ -90,6 +93,20 @@ public final class DatabaseHelper {
 
     // Remove queries
     private PreparedStatement rmPersonStatement;
+    private PreparedStatement rmEmailStatement;
+    private PreparedStatement rmPhoneStatement;
+    private PreparedStatement rmUserTypeStatement;
+    private PreparedStatement rmUserStatement;
+    private PreparedStatement rmFloorStatement;
+    private PreparedStatement rmRoomTypeStatement;
+    private PreparedStatement rmRoomStatement;
+    private PreparedStatement rmBookingStatement;
+
+    private PreparedStatement checkUserExistence;
+
+    private static final String ALL_PEOPLE = "SELECT * FROM person";
+
+    private Statement mStatement;
 
     /**
      * Constructor connects to the database and initializes PreparedStatement
@@ -97,7 +114,10 @@ public final class DatabaseHelper {
      */
     public DatabaseHelper() {
         connect();
+
         try {
+            mStatement = mConnection.createStatement();
+
             setPersonQueries();
             setEmailQueries();
             setPhoneQueries();
@@ -164,6 +184,10 @@ public final class DatabaseHelper {
                 "INSERT INTO " + PHONE
                 + "(" + CPF + ", " + PHONE_NUMBER + ")"
                 + "VALUES (?, ?)");
+
+        rmPhoneStatement = mConnection.prepareStatement(
+                "DELETE FROM " + PHONE
+                + " WHERE " + CPF + " = ?");
     }
 
     private void setEmailQueries() throws SQLException {
@@ -171,6 +195,10 @@ public final class DatabaseHelper {
                 "INSERT INTO " + EMAIL
                 + "(" + CPF + ", " + EMAIL_ADDRESS + ")"
                 + "VALUES (?, ?)");
+
+        rmEmailStatement = mConnection.prepareStatement(
+                "DELETE FROM " + EMAIL
+                + " WHERE " + CPF + " = ?");
     }
 
     private void setUserTypeQueries() throws SQLException {
@@ -178,6 +206,10 @@ public final class DatabaseHelper {
                 "INSERT INTO " + USER_TYPE
                 + "(" + USER_TYPE_ID + ", " + USER_TYPE_DESCRIPTION + ")"
                 + "VALUES (?, ?)");
+
+        rmUserTypeStatement = mConnection.prepareStatement(
+                "DELETE FROM " + USER_TYPE
+                + " WHERE " + USER_TYPE_ID + " = ?");
     }
 
     private void setUserQueries() throws SQLException {
@@ -185,6 +217,14 @@ public final class DatabaseHelper {
                 "INSERT INTO " + USER
                 + "(" + USER_ID + ", " + CPF + "," + USER_TYPE + ")"
                 + "VALUES (?, ?, ?)");
+
+        rmUserStatement = mConnection.prepareStatement(
+                "DELETE FROM " + USER
+                + " WHERE " + CPF + " = ?");
+
+        checkUserExistence = mConnection.prepareStatement(
+                "(SELECT * FROM " + USER
+                + " WHERE " + USER_ID + " = ?)");
     }
 
     private void setFloorQueries() throws SQLException {
@@ -192,6 +232,10 @@ public final class DatabaseHelper {
                 "INSERT INTO " + FLOOR
                 + "(" + FLOOR_ID + ", " + FLOOR_DESCRIPTION + ")"
                 + "VALUES (?, ?)");
+
+        rmFloorStatement = mConnection.prepareStatement(
+                "DELETE FROM " + FLOOR
+                + " WHERE " + FLOOR_ID + " = ?");
     }
 
     private void setRoomTypeQueries() throws SQLException {
@@ -199,6 +243,10 @@ public final class DatabaseHelper {
                 "INSERT INTO " + ROOM_TYPE
                 + "(" + ROOM_TYPE_ID + ", " + ROOM_TYPE_DESCRIPTION + ")"
                 + "VALUES (?, ?)");
+
+        rmRoomTypeStatement = mConnection.prepareStatement(
+                "DELETE FROM " + ROOM_TYPE
+                + " WHERE " + ROOM_TYPE_ID + " = ?");
     }
 
     private void setRoomQueries() throws SQLException {
@@ -207,6 +255,10 @@ public final class DatabaseHelper {
                 + "(" + ROOM_ID + ", " + ROOM_TYPE + ", " + FLOOR + ", "
                 + ROOM_CAPACITY + ", " + HAS_PROJECTOR + ", " + NUM_COMPUTERS + ")"
                 + "VALUES (?, ?, ?, ?, ?, ?)");
+
+        rmRoomStatement = mConnection.prepareStatement(
+                "DELETE FROM " + ROOM
+                + " WHERE " + ROOM_ID + " = ?");
     }
 
     private void setBookingQueries() throws SQLException {
@@ -215,7 +267,10 @@ public final class DatabaseHelper {
                 + "(" + USER + ", " + ROOM + ", "
                 + GOAL + ", " + NUM_PEOPLE + ", " + DATE_TIME + ")"
                 + "VALUES (?, ?, ?, ?, STR_TO_DATE(?, '" + MY_DATE_FORMAT + "') )");
-        //+ "VALUES (?, ?, ?, ?, ?))");
+
+        rmBookingStatement = mConnection.prepareStatement(
+                "DELETE FROM " + BOOKING
+                + " WHERE " + BOOKING_ID + " = ?");
     }
 
     // ---------------- Start of CREATE methods ----------------
@@ -301,9 +356,12 @@ public final class DatabaseHelper {
      * Creates an new user, a person, an email and a phone in their respective
      * tables.
      */
-    public void addNewUser(String userID, String cpf, int userTypeID, String emailAddress,
-            String phoneNumber, String name, char gender, String birth) {
+    public void addUser(String userID, String cpf, int userTypeID, String emailAddress,
+            String phoneNumber, String name, char gender, String birth) throws KeyExistsException {
 
+        if (userExists(userID)) {
+            throw new KeyExistsException("User already exists");
+        }
         // TODO
         //add cpf existence verification before trying to insertS
         addPerson(cpf, name, gender, birth);
@@ -395,12 +453,132 @@ public final class DatabaseHelper {
     }
 
 // ---------------- Start of DELETE methods ---------------- 
-    public void removePerson(String cpf) {
+    private void removePerson(String cpf) {
         try {
             rmPersonStatement.setString(1, cpf);
             rmPersonStatement.executeUpdate();
+
+            System.out.println("Person of " + cpf + " deleted.");
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void removeUser(String cpf) {
+        try {
+            rmUserStatement.setString(1, cpf);
+            rmUserStatement.executeUpdate();
+            removePerson(cpf);
+
+        } catch (SQLException ex) {
+            System.err.println("User cannot be deleted for data consistency.");
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void removePhone(String cpf) {
+        try {
+            rmPhoneStatement.setString(1, cpf);
+            rmPhoneStatement.executeUpdate();
+
+            System.out.println("Phone of CPF " + cpf + " deleted.");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void removeEmail(String cpf) {
+        try {
+            rmEmailStatement.setString(1, cpf);
+            rmEmailStatement.executeUpdate();
+
+            System.out.println("Email of CPF " + cpf + " deleted.");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void removeUserType(int userTypeID) {
+        try {
+            rmUserTypeStatement.setInt(1, userTypeID);
+            rmUserTypeStatement.executeUpdate();
+
+            System.out.println("UserType of userTypeID " + userTypeID + " deleted.");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void removeRoomType(String roomTypeID) {
+        try {
+            rmRoomTypeStatement.setString(1, roomTypeID);
+            rmRoomTypeStatement.executeUpdate();
+
+            System.out.println("RoomType of roomTypeID " + ROOM_TYPE_ID + " deleted.");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void removeRoom(String roomID) {
+        try {
+            rmRoomStatement.setString(1, roomID);
+            rmRoomStatement.executeUpdate();
+
+            System.out.println("Room of roomID " + ROOM_ID + " deleted.");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void removeFloor(int floorID) {
+        try {
+            rmFloorStatement.setInt(1, floorID);
+            rmFloorStatement.executeUpdate();
+
+            System.out.println("Floor of floorID " + ROOM_TYPE_ID + " deleted.");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void removeBooking(int bookingID) {
+        try {
+            rmBookingStatement.setInt(1, bookingID);
+            rmBookingStatement.executeUpdate();
+
+            System.out.println("Booking of bookingID" + ROOM_TYPE_ID + " deleted.");
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void printSelectEverythingFromPerson() {
+        try {
+            ResultSet mResultSet = mStatement.executeQuery(ALL_PEOPLE);
+            int numberOfColumns = mResultSet.getMetaData().getColumnCount();
+            while (mResultSet.next()) {
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    System.out.printf("%-30s\t", mResultSet.getObject(i));
+                }
+                System.out.println();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public boolean userExists(String userID) {
+        try {
+            checkUserExistence.setString(1, userID);
+            ResultSet mResultSet = checkUserExistence.executeQuery();
+            if (mResultSet.next()) {
+                return true;
+            }
+            mResultSet.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

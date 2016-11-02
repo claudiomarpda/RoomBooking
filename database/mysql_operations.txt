@@ -114,6 +114,7 @@ MODIFY description VARCHAR(36);
 ALTER TABLE `room_booking`.`room` 
 ADD COLUMN `floor` TINYINT(4) NULL AFTER `room_type`,
 ADD INDEX `floor_idx` (`floor` ASC);
+
 ALTER TABLE `room_booking`.`room` 
 ADD CONSTRAINT `floor`
   FOREIGN KEY (`floor`)
@@ -201,4 +202,3 @@ DROP COLUMN `email`;
 DELETE FROM person WHERE cpf = "22222222222";
 DELETE FROM phone WHERE cpf = "...";
 DELETE FROM email WHERE cpf = "22222222222";
-git commit -m "Create UserType, User, Room and Booking"

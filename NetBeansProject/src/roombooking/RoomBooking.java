@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class RoomBooking {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws KeyExistsException {
         DatabaseHelper mDatabaseHelper = new DatabaseHelper();
         //mDatabaseHelper.addPerson("33333333333", "Jonathan", 'M', "1994-01-01");
         //mDatabaseHelper.addEmail("11111111111", "th@email.com");
@@ -18,11 +18,28 @@ public class RoomBooking {
         //mDatabaseHelper.addUserType(2, "Aluno");
         //mDatabaseHelper.addUser("2015000000", "22222222222", 2);
 
-        //mDatabaseHelper.addNewUser("2016111111", "22222222222", 2, "jonathan@gmail.com", 
-        //      "083 9 2222-1111", "Jonathan", 'M', "1994-01-01");
+        //mDatabaseHelper.addUser("2016111111", "22222222222", 2, "jonathan@gmail.com", 
+        //    "083 9 2222-1111", "Jonathan", 'M', "1994-01-01");
         //mDatabaseHelper.addRoom("LAB-101", "LAB", 1, 60, 1, 30);
         // mDatabaseHelper.removePerson("22222222222");
         //mDatabaseHelper.addBooking("2016111111", "LAB-101", "Monitoria Banco de Dados I", 10, "2016-11-01 02:00 PM");
+        //mDatabaseHelper.removePerson("22222222222");
+        //mDatabaseHelper.removeUser("22222222222");
+        //mDatabaseHelper.removeEmail("11111111111");
+        //mDatabaseHelper.removeEmail("22222222222");
+        //mDatabaseHelper.removeBooking(1);
+        //mDatabaseHelper.removePhone("22222222222");
+        //mDatabaseHelper.removeFloor(0);
+        //mDatabaseHelper.addUserType(3, "Funcionário Admin");
+        //mDatabaseHelper.removeUserType(3);
+        //mDatabaseHelper.removeRoomType("AUL");
+        
+        //mDatabaseHelper.addRoom("AUD-001", "AUD", 1, 60, 1, 0);
+       // mDatabaseHelper.addRoomType("AUD", "Auditório");
+        //mDatabaseHelper.removeRoom("AUD-001");
+        mDatabaseHelper.printSelectEverythingFromPerson();
+        
+        //System.out.println(mDatabaseHelper.userExists("2016000000"));
         mDatabaseHelper.closeConnection();
         //dateTest();
     }
