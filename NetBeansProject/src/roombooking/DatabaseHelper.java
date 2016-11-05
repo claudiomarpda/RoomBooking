@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -102,9 +103,17 @@ public final class DatabaseHelper {
     private PreparedStatement rmRoomStatement;
     private PreparedStatement rmBookingStatement;
 
-    private PreparedStatement checkUserExistence;
+    // Update queries
+    private PreparedStatement upPersonStatement;
 
-    private static final String ALL_PEOPLE = "SELECT * FROM person";
+    // Read queries
+    private PreparedStatement readUserByCPFStatement;
+    private PreparedStatement readUserByIDStatement;
+    private PreparedStatement readAllUsersStatement;
+    private PreparedStatement readAllRoomsStatement;
+    private PreparedStatement readRoomsByTypeStatement;
+
+    private PreparedStatement checkUserExistence;
 
     private Statement mStatement;
 
@@ -177,6 +186,16 @@ public final class DatabaseHelper {
         rmPersonStatement = mConnection.prepareStatement(
                 "DELETE FROM " + PERSON
                 + " WHERE " + CPF + " = ?");
+
+        upPersonStatement = mConnection.prepareStatement(
+                "UPDATE " + PERSON + " SET "
+                + CPF + " = ?, "
+                + NAME + " = ?, "
+                + GENDER + " = ?, "
+                + BIRTH + " = ?, "
+                + "WHERE " + CPF + " = ?"
+        );
+
     }
 
     private void setPhoneQueries() throws SQLException {
@@ -225,6 +244,30 @@ public final class DatabaseHelper {
         checkUserExistence = mConnection.prepareStatement(
                 "(SELECT * FROM " + USER
                 + " WHERE " + USER_ID + " = ?)");
+
+        final String allUsersQuery = "SELECT "
+                + USER_ID + ", " + USER_TYPE_ID + ", " + USER_TYPE_DESCRIPTION + ", "
+                + PERSON + "." + CPF + "," + NAME + ", " + GENDER + ", " + BIRTH + " ,"
+                + PHONE + "." + PHONE_NUMBER + ", " + EMAIL_ADDRESS + " FROM " + PERSON
+                + " LEFT JOIN " + USER + " ON " + PERSON + "." + CPF + " = " + USER + "." + CPF
+                + " LEFT JOIN " + USER_TYPE + " ON " + USER + "." + USER_TYPE + " = " + USER_TYPE + "." + USER_TYPE_ID
+                + " LEFT JOIN " + PHONE + " ON " + PERSON + "." + CPF + " = " + PHONE + "." + CPF
+                + " LEFT JOIN " + EMAIL + " ON " + PERSON + "." + CPF + " = " + EMAIL + "." + CPF;
+
+        readAllUsersStatement = mConnection.prepareStatement(
+                allUsersQuery
+        );
+
+        readUserByCPFStatement = mConnection.prepareStatement(
+                allUsersQuery
+                + " WHERE " + PERSON + "." + CPF + " = ?"
+        );
+
+        readUserByIDStatement = mConnection.prepareStatement(
+                allUsersQuery
+                + " WHERE " + USER + "." + USER_ID + " = ?"
+        );
+
     }
 
     private void setFloorQueries() throws SQLException {
@@ -254,11 +297,30 @@ public final class DatabaseHelper {
                 "INSERT INTO " + ROOM
                 + "(" + ROOM_ID + ", " + ROOM_TYPE + ", " + FLOOR + ", "
                 + ROOM_CAPACITY + ", " + HAS_PROJECTOR + ", " + NUM_COMPUTERS + ")"
-                + "VALUES (?, ?, ?, ?, ?, ?)");
+                + "VALUES (?, ?, ?, ?, ?, ?)"
+        );
 
         rmRoomStatement = mConnection.prepareStatement(
                 "DELETE FROM " + ROOM
-                + " WHERE " + ROOM_ID + " = ?");
+                + " WHERE " + ROOM_ID + " = ?"
+        );
+
+        final String allRoomsQuery = "SELECT *"
+                //+ FLOOR_ID + ", " + FLOOR+"."+FLOOR_DESCRIPTION+", "    +ROOM_ID + ", " + ROOM_TYPE + ", " + FLOOR + ", " 
+                //+ ROOM_CAPACITY + ", " + HAS_PROJECTOR + ", " + NUM_COMPUTERS
+                + " FROM " + ROOM
+                + " LEFT JOIN " + FLOOR + " ON " + FLOOR + "." + FLOOR_ID + " = " + ROOM + "." + FLOOR
+                + " LEFT JOIN " + ROOM_TYPE + " ON " + ROOM_TYPE + "." + ROOM_TYPE_ID + " = " + ROOM + "." + ROOM_TYPE;
+
+        readAllRoomsStatement = mConnection.prepareStatement(
+                allRoomsQuery
+        );
+        /* int floorID, String floor, String roomTypeID, String roomTypeDescription, 
+        String roomID, int capacity, boolean hasProjector, int numberOfComputers*/
+        readRoomsByTypeStatement = mConnection.prepareStatement(
+                allRoomsQuery
+                + " WHERE " + ROOM + "." + ROOM_TYPE + " = ?"
+        );
     }
 
     private void setBookingQueries() throws SQLException {
@@ -363,7 +425,7 @@ public final class DatabaseHelper {
             throw new KeyExistsException("User already exists");
         }
         // TODO
-        //add cpf existence verification before trying to insertS
+        //add cpf existence verification before trying to insert
         addPerson(cpf, name, gender, birth);
         addEmail(cpf, emailAddress);
         addPhone(cpf, phoneNumber);
@@ -541,7 +603,7 @@ public final class DatabaseHelper {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void removeBooking(int bookingID) {
         try {
             rmBookingStatement.setInt(1, bookingID);
@@ -554,8 +616,9 @@ public final class DatabaseHelper {
     }
 
     public void printSelectEverythingFromPerson() {
+        final String allPeople = "SELECT * FROM person";
         try {
-            ResultSet mResultSet = mStatement.executeQuery(ALL_PEOPLE);
+            ResultSet mResultSet = mStatement.executeQuery(allPeople);
             int numberOfColumns = mResultSet.getMetaData().getColumnCount();
             while (mResultSet.next()) {
                 for (int i = 1; i <= numberOfColumns; i++) {
@@ -563,6 +626,7 @@ public final class DatabaseHelper {
                 }
                 System.out.println();
             }
+            mResultSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -581,4 +645,152 @@ public final class DatabaseHelper {
         }
         return false;
     }
+
+    private ArrayList<User> getUsers(ResultSet resultSet) throws SQLException {
+
+        final ArrayList<User> list = new ArrayList<>();
+
+        if (!resultSet.next()) { // if the search has no result
+            return null;
+        } else {
+            resultSet.beforeFirst(); // before the first row
+        }
+
+        while (resultSet.next()) { // moves to the next valid row
+            User user = new User(
+                    resultSet.getString(1),
+                    resultSet.getInt(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getString(5),
+                    resultSet.getString(6),
+                    resultSet.getDate(7),
+                    resultSet.getString(8),
+                    resultSet.getString(9)
+            );
+            list.add(user);
+        }
+        resultSet.close();
+        return list;
+    }
+
+    private User getUserByKey(String key, PreparedStatement pStatement) {
+        User user = null;
+        try {
+            pStatement.setString(1, key);
+            ResultSet mResultSet = pStatement.executeQuery();
+            if (!mResultSet.next()) {
+                return null;
+            }
+            user = new User(
+                    mResultSet.getString(1),
+                    mResultSet.getInt(2),
+                    mResultSet.getString(3),
+                    mResultSet.getString(4),
+                    mResultSet.getString(5),
+                    mResultSet.getString(6),
+                    mResultSet.getDate(7),
+                    mResultSet.getString(8),
+                    mResultSet.getString(9)
+            );
+            mResultSet.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return user;
+    }
+
+    public User getUserByCPF(String cpf) {
+        return getUserByKey(cpf, readUserByCPFStatement);
+    }
+
+    public User getUserByID(String id) {
+        return getUserByKey(id, readUserByIDStatement);
+    }
+
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> list = null;
+        try {
+            ResultSet rs = readAllUsersStatement.executeQuery();
+            list = getUsers(rs);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return list;
+    }
+
+    public ArrayList<Room> getRooms(ResultSet resultSet) throws SQLException {
+        final ArrayList<Room> list = new ArrayList<>();
+
+        if (!resultSet.next()) { // if the search has no result
+            return null;
+        } else {
+            resultSet.beforeFirst(); // before the first row
+        }
+
+        while (resultSet.next()) { // moves to the next valid row
+
+            boolean hasProjector = resultSet.getInt(5) == 1 ? true : false;
+            Room room = new Room(
+                    resultSet.getInt(7),
+                    resultSet.getString(8),
+                    resultSet.getString(9),
+                    resultSet.getString(10),
+                    resultSet.getString(1),
+                    resultSet.getInt(4),
+                    hasProjector,
+                    resultSet.getInt(6)
+            );
+            list.add(room);
+        }
+        resultSet.close();
+        return list;
+    }
+
+    public ArrayList<Room> getAllRooms() {
+        ArrayList<Room> list = null;
+        try {
+            list = getRooms(readAllRoomsStatement.executeQuery());
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ArrayList<Room> getAllRoomsByType(String type) {
+        ArrayList<Room> list = null;
+        try {
+            readRoomsByTypeStatement.setString(1, type);
+            ResultSet rs = readRoomsByTypeStatement.executeQuery();
+            list = getRooms(rs);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    /*
+    public void updatePerson(String currentCPF, Person p) {
+        try {
+            upPersonStatement.setString(1, p.getCpf());
+            upPersonStatement.setString(2, p.getName());
+            upPersonStatement.setString(3, String.valueOf(p.getGender()));
+            upPersonStatement.setDate(4, p.getBirth());
+            upPersonStatement.setString(5, currentCPF);
+
+            upPersonStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void updateUser(User u) {
+
+    }
+     */
 }

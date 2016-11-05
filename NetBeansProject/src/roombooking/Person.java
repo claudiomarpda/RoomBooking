@@ -1,22 +1,39 @@
 package roombooking;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 public abstract class Person {
+
     protected String cpf;
     protected String name;
-    protected char gender;
+    protected String gender;
     protected Date birth;
-    protected ArrayList<String> phoneNumberList;
+    //protected ArrayList<String> phoneNumberList;
+    protected String phoneNumber;
     protected String email;
 
-    public Person(String cpf, String name, char gender, Date birth, ArrayList<String> phoneNumberList) {
+    public Person() {
+
+    }
+
+    // Construtor with a list of phones
+    public Person(String cpf, String name, String gender, Date birth, ArrayList<String> phoneNumberList) {
         this.cpf = cpf;
         this.name = name;
         this.gender = gender;
         this.birth = birth;
-        this.phoneNumberList = phoneNumberList;
+        //this.phoneNumberList = phoneNumberList;
+    }
+
+    // Constructor with only one phone number
+    public Person(String cpf, String name, String gender, Date birth, String phoneNumber, String email) {
+        this.cpf = cpf;
+        this.name = name;
+        this.gender = gender;
+        this.birth = birth;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
     public String getCpf() {
@@ -35,11 +52,11 @@ public abstract class Person {
         this.name = name;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -50,7 +67,7 @@ public abstract class Person {
     public void setBirth(Date birth) {
         this.birth = birth;
     }
-
+/*
     public ArrayList<String> getPhoneNumberList() {
         return phoneNumberList;
     }
@@ -58,7 +75,7 @@ public abstract class Person {
     public void setPhoneNumberList(ArrayList<String> phoneNumberList) {
         this.phoneNumberList = phoneNumberList;
     }
-
+*/
     public String getEmail() {
         return email;
     }
@@ -66,5 +83,18 @@ public abstract class Person {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" + "cpf=" + cpf + ", name=" + name + ", gender=" + gender + ", birth=" + birth + ", phoneNumber=" + phoneNumber + ", email=" + email + '}';
+    }
+
 }

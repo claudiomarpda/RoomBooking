@@ -56,5 +56,9 @@ public class Booking {
         this.numberOfPeople = numberOfPeople;
     }
     
+      @Override
+    public String toString() {
+        return "Booking{" + "bookingID=" + bookingID + ", userID=" + userID + ", roomID=" + roomID + ", goal=" + goal + ", numberOfPeople=" + numberOfPeople + '}';
+    }
     
 }

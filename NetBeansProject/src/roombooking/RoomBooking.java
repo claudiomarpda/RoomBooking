@@ -2,7 +2,9 @@ package roombooking;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,6 +12,10 @@ public class RoomBooking {
 
     public static void main(String[] args) throws KeyExistsException {
         DatabaseHelper mDatabaseHelper = new DatabaseHelper();
+
+        /**
+         * ********** Database operations tests ***********
+         */
         //mDatabaseHelper.addPerson("33333333333", "Jonathan", 'M', "1994-01-01");
         //mDatabaseHelper.addEmail("11111111111", "th@email.com");
         //mDatabaseHelper.addPhone("11111111111", "+55 083 91111-2222");
@@ -17,10 +23,9 @@ public class RoomBooking {
         //mDatabaseHelper.addRoomType("AUL", "Aula");
         //mDatabaseHelper.addUserType(2, "Aluno");
         //mDatabaseHelper.addUser("2015000000", "22222222222", 2);
-
-        //mDatabaseHelper.addUser("2016111111", "22222222222", 2, "jonathan@gmail.com", 
+        //mDatabaseHelper.addUser("20163", "55555555555", 2, "jonathan@gmail.com", 
         //    "083 9 2222-1111", "Jonathan", 'M', "1994-01-01");
-        //mDatabaseHelper.addRoom("LAB-101", "LAB", 1, 60, 1, 30);
+        //mDatabaseHelper.addRoom("LAB-102", "LAB", 1, 60, 0, 30);
         // mDatabaseHelper.removePerson("22222222222");
         //mDatabaseHelper.addBooking("2016111111", "LAB-101", "Monitoria Banco de Dados I", 10, "2016-11-01 02:00 PM");
         //mDatabaseHelper.removePerson("22222222222");
@@ -33,13 +38,60 @@ public class RoomBooking {
         //mDatabaseHelper.addUserType(3, "Funcionário Admin");
         //mDatabaseHelper.removeUserType(3);
         //mDatabaseHelper.removeRoomType("AUL");
-        
         //mDatabaseHelper.addRoom("AUD-001", "AUD", 1, 60, 1, 0);
-       // mDatabaseHelper.addRoomType("AUD", "Auditório");
+        // mDatabaseHelper.addRoomType("AUD", "Auditório");
         //mDatabaseHelper.removeRoom("AUD-001");
-        mDatabaseHelper.printSelectEverythingFromPerson();
-        
+        //mDatabaseHelper.printSelectEverythingFromPerson();
         //System.out.println(mDatabaseHelper.userExists("2016000000"));
+        //mDatabaseHelper.updatePerson("55555555555", p);
+        /**
+         * ********** Classes instance tests ***********
+         */
+        /*        
+        User p = new User("20160", 2, "Aluno", "00000000000", "Rodrigo", 'M', java.sql.Date.valueOf("1995-01-01"), 
+                "083 9 0000-1111", "r@gmail.com");
+        System.out.println(p.toString());
+        
+        Room r = new Room(1, "Primeiro andar", "LAB", "Laboratório", "LAB-102", 60, true, 30);
+        System.out.println(r.toString());
+        
+        // bookingID is autoincrement. 
+        // Therefore, it has to be gotten from an existing value from table
+        Booking b = new Booking(2, "2016111111", "LAB-101", "To Rule The World", 15);
+        System.out.println(b.toString());
+        
+         */
+        /**
+         * ********** READ operations ***********
+         */
+        
+        List<User> allUsers = mDatabaseHelper.getAllUsers();
+        for (User u : allUsers) {
+            System.out.println(u.toString());System.out.println("");
+        }
+         
+ 
+        User u = mDatabaseHelper.getUserByCPF("55555555555");
+        if(u != null)
+            System.out.println(u.toString());
+         
+ 
+        User u2 = mDatabaseHelper.getUserByID("2016000000");
+        if (u2 != null) {
+            System.out.println(u2.toString());
+        }
+         
+ /*
+        List<Room> roomList = mDatabaseHelper.getAllRooms();
+        for (Room r : roomList) {
+            System.out.println(r.toString());
+        }
+        System.out.println();
+        List<Room> roomList2 = mDatabaseHelper.getAllRoomsByType("LAB");
+        for (Room r : roomList2) {
+            System.out.println(r.toString());
+        }
+*/
         mDatabaseHelper.closeConnection();
         //dateTest();
     }
