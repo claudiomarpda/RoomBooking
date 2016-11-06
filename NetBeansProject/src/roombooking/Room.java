@@ -1,5 +1,8 @@
 package roombooking;
 
+/**
+ * Room class represents database tables FLOOR, ROOM_TYPE and ROOM.
+ */
 public class Room {
 
     private int floorID;

@@ -1,16 +1,16 @@
 package roombooking;
 
 /**
- * When a key already exists in the database this exception is thrown in order
- * to avoid duplicated date.
+ * 
+ * When some key is not found in the database.
  */
-public class KeyExistsException extends Exception {
+public class KeyNotFoundException extends Exception {
 
     /**
      * Creates a new instance of <code>KeyExistsException</code> without detail
      * message.
      */
-    public KeyExistsException() {
+    public KeyNotFoundException() {
     }
 
     /**
@@ -19,7 +19,7 @@ public class KeyExistsException extends Exception {
      *
      * @param msg the detail message.
      */
-    public KeyExistsException(String msg) {
+    public KeyNotFoundException(String msg) {
         super(msg);
     }
 }

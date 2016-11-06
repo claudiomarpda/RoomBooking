@@ -1,8 +1,10 @@
 package roombooking;
 
-import java.util.ArrayList;
 import java.sql.Date;
 
+/**
+ * User class represents database table User.
+ */
 public class User extends Person {
 
     private String userID;
@@ -10,15 +12,6 @@ public class User extends Person {
     private String userTypeDescription;
 
     public User() {
-    }
-
-    // Construtor with a list of phones
-    public User(String userID, byte userTypeID, String cpf, String name,
-            String gender, Date birth, ArrayList<String> phoneNumberList, String userTypeDescription) {
-        super(cpf, name, gender, birth, phoneNumberList);
-        this.userTypeID = userTypeID;
-        this.userID = userID;
-        this.userTypeDescription = userTypeDescription;
     }
 
     // Constructor with only one phone number
@@ -56,9 +49,9 @@ public class User extends Person {
 
     @Override
     public String toString() {
-        
-        return "User{" + "userID=" + userID + ", userTypeID=" + userTypeID + ", userTypeDescription=" + userTypeDescription +
-                " "+super.toString()+ '}';
+
+        return "User{" + "userID=" + userID + ", userTypeID=" + userTypeID + ", userTypeDescription=" + userTypeDescription
+                + " " + super.toString() + '}';
     }
-    
+
 }

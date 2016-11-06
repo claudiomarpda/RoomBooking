@@ -12,16 +12,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * *
  *
  * @author Claudiomar Araújo
  * @author Jonathan Rodrigues
  *
  * DatabaseHelper provides CRUD operations in a MySQL database. This class is
- * easily understood after checking the documentation. Therefore, we avoid to
- * pollute the code with unnecessary information in comments. For details about
- * the database, see the database design in the documentation. For details about
- * the whole project, see the Requirements Specification in the documentation.
+ * easily understood after checking the documentation. Therefore, we write
+ * comments only when necessary. For details about the database, see the
+ * database design in the documentation. For details about the whole project,
+ * see the Requirements Specification in the documentation.
  */
 public final class DatabaseHelper {
 
@@ -112,8 +111,11 @@ public final class DatabaseHelper {
     private PreparedStatement readAllUsersStatement;
     private PreparedStatement readAllRoomsStatement;
     private PreparedStatement readRoomsByTypeStatement;
+    private PreparedStatement readAllBookingsStatement;
+    private PreparedStatement readBookingsByUserIDStatement;
 
     private PreparedStatement checkUserExistence;
+    private PreparedStatement checkBookingExistence;
 
     private Statement mStatement;
 
@@ -142,7 +144,7 @@ public final class DatabaseHelper {
         }
     }
 
-    /**
+    /*
      * Connects to the MySQL database according to URL, USERNAME and, PASSWORD.
      */
     public void connect() {
@@ -160,7 +162,7 @@ public final class DatabaseHelper {
         }
     }
 
-    /**
+    /*
      * Closes the connection to the MySQL database.
      */
     public void closeConnection() {
@@ -245,6 +247,7 @@ public final class DatabaseHelper {
                 "(SELECT * FROM " + USER
                 + " WHERE " + USER_ID + " = ?)");
 
+        // The result columns type represents all attributes of User class
         final String allUsersQuery = "SELECT "
                 + USER_ID + ", " + USER_TYPE_ID + ", " + USER_TYPE_DESCRIPTION + ", "
                 + PERSON + "." + CPF + "," + NAME + ", " + GENDER + ", " + BIRTH + " ,"
@@ -305,9 +308,8 @@ public final class DatabaseHelper {
                 + " WHERE " + ROOM_ID + " = ?"
         );
 
+        // The result columns type represents all attributes of Room class
         final String allRoomsQuery = "SELECT *"
-                //+ FLOOR_ID + ", " + FLOOR+"."+FLOOR_DESCRIPTION+", "    +ROOM_ID + ", " + ROOM_TYPE + ", " + FLOOR + ", " 
-                //+ ROOM_CAPACITY + ", " + HAS_PROJECTOR + ", " + NUM_COMPUTERS
                 + " FROM " + ROOM
                 + " LEFT JOIN " + FLOOR + " ON " + FLOOR + "." + FLOOR_ID + " = " + ROOM + "." + FLOOR
                 + " LEFT JOIN " + ROOM_TYPE + " ON " + ROOM_TYPE + "." + ROOM_TYPE_ID + " = " + ROOM + "." + ROOM_TYPE;
@@ -315,15 +317,20 @@ public final class DatabaseHelper {
         readAllRoomsStatement = mConnection.prepareStatement(
                 allRoomsQuery
         );
-        /* int floorID, String floor, String roomTypeID, String roomTypeDescription, 
-        String roomID, int capacity, boolean hasProjector, int numberOfComputers*/
+
         readRoomsByTypeStatement = mConnection.prepareStatement(
                 allRoomsQuery
                 + " WHERE " + ROOM + "." + ROOM_TYPE + " = ?"
         );
+
     }
 
     private void setBookingQueries() throws SQLException {
+
+        /**
+         * STR_TO_DATE converts the given string to SQL Date that will be
+         * retrieved later with getTimetamp
+         */
         addBookingStatement = mConnection.prepareStatement(
                 "INSERT INTO " + BOOKING
                 + "(" + USER + ", " + ROOM + ", "
@@ -333,10 +340,27 @@ public final class DatabaseHelper {
         rmBookingStatement = mConnection.prepareStatement(
                 "DELETE FROM " + BOOKING
                 + " WHERE " + BOOKING_ID + " = ?");
+
+        final String allBookingsQuery = "SELECT *"
+                + " FROM " + BOOKING;
+
+        readAllBookingsStatement = mConnection.prepareStatement(
+                allBookingsQuery
+        );
+        readBookingsByUserIDStatement = mConnection.prepareStatement(
+                allBookingsQuery
+                + " WHERE " + USER + " = ?"
+        );
+
+        // Looks for a booking of given room_type, date and time.
+        checkBookingExistence = mConnection.prepareStatement(
+                allBookingsQuery
+                + " WHERE " + ROOM + " = ? AND " + DATE_TIME + " = ?"
+        );
     }
 
     // ---------------- Start of CREATE methods ----------------
-    /**
+    /*
      * Creates an new person in Person table.
      */
     private void addPerson(String cpf, String name, char gender, String birth) {
@@ -353,7 +377,7 @@ public final class DatabaseHelper {
         System.out.println("addPerson successful.");
     }
 
-    /**
+    /*
      * Creates an new email in Email table.
      */
     private void addEmail(String cpf, String emailAddress) {
@@ -368,7 +392,7 @@ public final class DatabaseHelper {
         System.out.println("addPhone successful.");
     }
 
-    /**
+    /*
      * Creates an new phone in Phone table.
      */
     private void addPhone(String cpf, String phoneNumber) {
@@ -383,7 +407,7 @@ public final class DatabaseHelper {
         System.out.println("addEmail successful.");
     }
 
-    /**
+    /*
      * Creates an new user type in UserType table.
      */
     public void addUserType(int userTypeID, String description) {
@@ -414,7 +438,7 @@ public final class DatabaseHelper {
         System.out.println("addUser successful.");
     }
 
-    /**
+    /*
      * Creates an new user, a person, an email and a phone in their respective
      * tables.
      */
@@ -424,8 +448,7 @@ public final class DatabaseHelper {
         if (userExists(userID)) {
             throw new KeyExistsException("User already exists");
         }
-        // TODO
-        //add cpf existence verification before trying to insert
+
         addPerson(cpf, name, gender, birth);
         addEmail(cpf, emailAddress);
         addPhone(cpf, phoneNumber);
@@ -441,7 +464,7 @@ public final class DatabaseHelper {
         }
     }
 
-    /**
+    /*
      * Creates a new floor in Floor table.
      */
     public void addFloor(int floorID, String description) {
@@ -456,7 +479,7 @@ public final class DatabaseHelper {
         System.out.println("addFloor successful.");
     }
 
-    /**
+    /*
      * Creates a new room type in RoomType table.
      */
     public void addRoomType(String roomTypeID, String description) {
@@ -471,7 +494,7 @@ public final class DatabaseHelper {
         System.out.println("addRoomType successful.");
     }
 
-    /**
+    /*
      * Creates a new room in Room table.
      */
     public void addRoom(String roomID, String roomType, int floorID, int capacity,
@@ -491,15 +514,19 @@ public final class DatabaseHelper {
         System.out.println("addRoom successful.");
     }
 
-    /**
+    /*
      * Creates a new booking in Booking table.
      */
-    public void addBooking(String userID, String roomID, String goal, int numberOfPeople,
-            String dateTime) {
+    public boolean addBooking(String userID, String roomID, String goal, int numberOfPeople,
+            String dateTime) throws KeyExistsException {
 
-        // TODO
-        // verify before inserting in the table in order to 
-        // avoid more than one booking at the same time
+        /* 
+        Verifies booking existence before inserting in the table in order to 
+         avoid more than one booking at the same time 
+         */
+        if (bookingExists(roomID, dateTime)) {
+            throw new KeyExistsException("Booking already exists");
+        }
         try {
             addBookingStatement.setString(1, userID);
             addBookingStatement.setString(2, roomID);
@@ -512,6 +539,36 @@ public final class DatabaseHelper {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("addBooking successful.");
+        return true;
+    }
+
+    /**
+     * Checks if a booking exists
+     *
+     * @param roomID
+     * @param dateTime is compared as String with Date in MySQL query (and it
+     * works)
+     * @return true if exists, false otherwise
+     */
+    private boolean bookingExists(String roomID, String dateTime) {
+        ResultSet mResultSet = null;
+        try {
+            checkBookingExistence.setString(1, roomID);
+            checkBookingExistence.setString(2, dateTime);
+            mResultSet = checkBookingExistence.executeQuery();
+            if (mResultSet.next()) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return false;
     }
 
 // ---------------- Start of DELETE methods ---------------- 
@@ -615,37 +672,34 @@ public final class DatabaseHelper {
         }
     }
 
-    public void printSelectEverythingFromPerson() {
-        final String allPeople = "SELECT * FROM person";
-        try {
-            ResultSet mResultSet = mStatement.executeQuery(allPeople);
-            int numberOfColumns = mResultSet.getMetaData().getColumnCount();
-            while (mResultSet.next()) {
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    System.out.printf("%-30s\t", mResultSet.getObject(i));
-                }
-                System.out.println();
-            }
-            mResultSet.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     public boolean userExists(String userID) {
+        ResultSet mResultSet = null;
         try {
             checkUserExistence.setString(1, userID);
-            ResultSet mResultSet = checkUserExistence.executeQuery();
+            mResultSet = checkUserExistence.executeQuery();
             if (mResultSet.next()) {
                 return true;
             }
-            mResultSet.close();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return false;
     }
 
+    /**
+     * Adds users to one list according to resultSet from MySQL database.
+     *
+     * @param resultSet after one query statement executed, according to the
+     * calling method.
+     * @return a list of users according to ResultSet.
+     * @throws SQLException
+     */
     private ArrayList<User> getUsers(ResultSet resultSet) throws SQLException {
 
         final ArrayList<User> list = new ArrayList<>();
@@ -670,18 +724,30 @@ public final class DatabaseHelper {
             );
             list.add(user);
         }
-        resultSet.close();
         return list;
     }
 
-    private User getUserByKey(String key, PreparedStatement pStatement) {
+    /**
+     * Looks for a User in the database according to given key and
+     * PreparedStatement.
+     *
+     * @param key from database (CPF, ID).
+     * @param pStatement has a query to be executed in order to obtain a result
+     * from database.
+     * @return one User.
+     * @throws KeyNotFoundException when the user doesn't exist.
+     */
+    private User getUserByKey(String key, PreparedStatement pStatement) throws KeyNotFoundException {
         User user = null;
+        ResultSet mResultSet = null;
         try {
             pStatement.setString(1, key);
-            ResultSet mResultSet = pStatement.executeQuery();
-            if (!mResultSet.next()) {
-                return null;
+            mResultSet = pStatement.executeQuery();
+
+            if (!mResultSet.next()) { // if the search has no result
+                throw new KeyNotFoundException("Booking not found for key " + key);
             }
+
             user = new User(
                     mResultSet.getString(1),
                     mResultSet.getInt(2),
@@ -693,36 +759,74 @@ public final class DatabaseHelper {
                     mResultSet.getString(8),
                     mResultSet.getString(9)
             );
-            mResultSet.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return user;
     }
 
-    public User getUserByCPF(String cpf) {
+    /**
+     * Looks for a User in the database by its CPF with the method getUserByKey.
+     *
+     * @param cpf the primary key of Person table of the database.
+     * @return one User, if exist.
+     * @throws KeyNotFoundException when key CPF is not found.
+     */
+    public User getUserByCPF(String cpf) throws KeyNotFoundException {
         return getUserByKey(cpf, readUserByCPFStatement);
     }
 
-    public User getUserByID(String id) {
+    /**
+     * Looks for a User in the database by its ID with the method getUserByKey.
+     *
+     * @param id the primary key of User table of the database.
+     * @return one User, if exist.
+     * @throws KeyNotFoundException when id is not found.
+     */
+    public User getUserByID(String id) throws KeyNotFoundException {
         return getUserByKey(id, readUserByIDStatement);
     }
 
+    /**
+     * Gets all registered users in the database with getUsers method.
+     *
+     * @return a list of all users.
+     */
     public ArrayList<User> getAllUsers() {
         ArrayList<User> list = null;
+        ResultSet mResultSet = null;
         try {
-            ResultSet rs = readAllUsersStatement.executeQuery();
-            list = getUsers(rs);
+            mResultSet = readAllUsersStatement.executeQuery();
+            list = getUsers(mResultSet);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
         return list;
     }
 
-    public ArrayList<Room> getRooms(ResultSet resultSet) throws SQLException {
+    /**
+     * Adds rooms to one list according to resultSet from MySQL database.
+     *
+     * @param resultSet after one query statement executed, according to the
+     * calling method.
+     * @return a list of Rooms according to resultSet.
+     * @throws SQLException
+     */
+    private ArrayList<Room> getRooms(ResultSet resultSet) throws SQLException {
         final ArrayList<Room> list = new ArrayList<>();
 
         if (!resultSet.next()) { // if the search has no result
@@ -746,31 +850,167 @@ public final class DatabaseHelper {
             );
             list.add(room);
         }
-        resultSet.close();
+
         return list;
     }
 
+    /**
+     * Gets all registered rooms in the database with getRooms method.
+     *
+     * @return a list of all rooms.
+     */
     public ArrayList<Room> getAllRooms() {
         ArrayList<Room> list = null;
+        ResultSet mResultSet = null;
         try {
-            list = getRooms(readAllRoomsStatement.executeQuery());
+            mResultSet = readAllRoomsStatement.executeQuery();
+            list = getRooms(mResultSet);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return list;
     }
 
+    /**
+     * Gets all registered rooms in the database according to room type with
+     * getRooms method.
+     *
+     * @param type room_type of Room table of the database.
+     * @return a list of all rooms of given type.
+     */
     public ArrayList<Room> getAllRoomsByType(String type) {
         ArrayList<Room> list = null;
         try {
             readRoomsByTypeStatement.setString(1, type);
-            ResultSet rs = readRoomsByTypeStatement.executeQuery();
-            list = getRooms(rs);
+            ResultSet mResultSet = readRoomsByTypeStatement.executeQuery();
+            list = getRooms(mResultSet);
 
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+
+    /**
+     * Adds booking to one list according to resultSet from MySQL database.
+     *
+     * @param resultSet after one query statement executed, according to the
+     * calling method.
+     * @return a list of Bookings according to resultSet.
+     * @throws SQLException
+     */
+    private ArrayList<Booking> getBookings(ResultSet resultSet) throws SQLException {
+        final ArrayList<Booking> list = new ArrayList<>();
+
+        if (!resultSet.next()) { // if the search has no result
+            return null;
+        } else {
+            resultSet.beforeFirst(); // before the first row
+        }
+
+        while (resultSet.next()) { // moves to the next valid row
+
+            Booking room = new Booking(
+                    resultSet.getInt(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getInt(5),
+                    resultSet.getTimestamp(6)
+            );
+            list.add(room);
+        }
+
+        return list;
+    }
+
+    /**
+     * Gets all registered bookings from database with getBookings method.
+     *
+     * @return list of bookings according to resultSet.
+     */
+    public ArrayList<Booking> getAllBookings() {
+        ArrayList<Booking> list = null;
+        ResultSet mResultSet = null;
+        try {
+            mResultSet = readAllBookingsStatement.executeQuery();
+            list = getBookings(mResultSet);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Gets all registered bookings done by one user in the database with
+     * getRooms method.
+     *
+     * @param userID the primary key of User table of the database.
+     * @return list of bookings according to resultSet.
+     * @throws KeyNotFoundException when there is no booking for the given
+     * userID.
+     */
+    public ArrayList<Booking> getBookingsByUserID(String userID) throws KeyNotFoundException {
+        ArrayList<Booking> list = null;
+        ResultSet mResultSet = null;
+        try {
+            readBookingsByUserIDStatement.setString(1, userID);
+            mResultSet = readBookingsByUserIDStatement.executeQuery();
+            if (!mResultSet.next()) { // if the search has no result
+                throw new KeyNotFoundException("Booking not found for user id " + userID);
+            } else {
+                mResultSet.beforeFirst(); // before the first row
+            }
+            list = getBookings(mResultSet);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * For reference and test purpose.
+     */
+    public void printSelectEverythingFromPerson() {
+        final String allPeople = "SELECT * FROM person";
+        ResultSet mResultSet = null;
+        try {
+            mResultSet = mStatement.executeQuery(allPeople);
+            int numberOfColumns = mResultSet.getMetaData().getColumnCount();
+            while (mResultSet.next()) {
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    System.out.printf("%-30s\t", mResultSet.getObject(i));
+                }
+                System.out.println();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /*

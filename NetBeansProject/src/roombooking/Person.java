@@ -1,8 +1,11 @@
 package roombooking;
 
-import java.util.ArrayList;
 import java.sql.Date;
 
+/**
+ * 
+ * Person class represents database tables PERSON, PHONE and EMAIL.
+ */
 public abstract class Person {
 
     protected String cpf;
@@ -15,15 +18,6 @@ public abstract class Person {
 
     public Person() {
 
-    }
-
-    // Construtor with a list of phones
-    public Person(String cpf, String name, String gender, Date birth, ArrayList<String> phoneNumberList) {
-        this.cpf = cpf;
-        this.name = name;
-        this.gender = gender;
-        this.birth = birth;
-        //this.phoneNumberList = phoneNumberList;
     }
 
     // Constructor with only one phone number
@@ -67,15 +61,7 @@ public abstract class Person {
     public void setBirth(Date birth) {
         this.birth = birth;
     }
-/*
-    public ArrayList<String> getPhoneNumberList() {
-        return phoneNumberList;
-    }
 
-    public void setPhoneNumberList(ArrayList<String> phoneNumberList) {
-        this.phoneNumberList = phoneNumberList;
-    }
-*/
     public String getEmail() {
         return email;
     }

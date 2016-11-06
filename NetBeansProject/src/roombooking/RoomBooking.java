@@ -2,15 +2,20 @@ package roombooking;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * 
+ * This class is used for test cases. All methods are executed after
+ * written.
+ *
+ * @author Claudiomar Araújo
+ * @author Jonathan Rodrigues
+ */
 public class RoomBooking {
 
-    public static void main(String[] args) throws KeyExistsException {
+    public static void main(String[] args) throws KeyNotFoundException {
         DatabaseHelper mDatabaseHelper = new DatabaseHelper();
 
         /**
@@ -64,7 +69,7 @@ public class RoomBooking {
         /**
          * ********** READ operations ***********
          */
-        
+        /*        
         List<User> allUsers = mDatabaseHelper.getAllUsers();
         for (User u : allUsers) {
             System.out.println(u.toString());System.out.println("");
@@ -80,7 +85,7 @@ public class RoomBooking {
         if (u2 != null) {
             System.out.println(u2.toString());
         }
-         
+         */
  /*
         List<Room> roomList = mDatabaseHelper.getAllRooms();
         for (Room r : roomList) {
@@ -91,11 +96,30 @@ public class RoomBooking {
         for (Room r : roomList2) {
             System.out.println(r.toString());
         }
-*/
+         */
+ /*
+        List<Booking> bList = mDatabaseHelper.getAllBookings();
+        for (Booking b : bList) {
+            System.out.println(b.toString());
+            System.out.println(mDatabaseHelper.bookingExists(b.getRoomID(), b.getTimeStamp().toString()));
+        }
+        
+        List<Booking> bList2 = mDatabaseHelper.getBookingsByUserID("2016111111");
+        for (Booking b : bList2) {
+           // System.out.println(b.toString());
+        }
+       
+        
+        System.out.println(mDatabaseHelper.bookingExists("LAB-101", "2016-11-01 14:00:00"));
+        
+         */
         mDatabaseHelper.closeConnection();
         //dateTest();
     }
-
+    
+    /**
+     * For reference and test of java.sql.Date and java.util.Date.
+     */
     public static void dateTest() {
         java.util.Date dt = new java.util.Date();
         System.out.println(dt.toString());
@@ -108,7 +132,7 @@ public class RoomBooking {
         String s = "14:35:59";
         final SimpleDateFormat sdf2 = new SimpleDateFormat("H:mm");
         try {
-            final Date dateObj = sdf2.parse(s);
+            final java.util.Date dateObj = sdf2.parse(s);
             System.out.println(dateObj);
             System.out.println(new SimpleDateFormat("K:mm:ss aa").format(dt));
 
@@ -117,7 +141,7 @@ public class RoomBooking {
         } catch (ParseException ex) {
             Logger.getLogger(RoomBooking.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        // 2016-11-01 02:00 PM
     }
 
 }
