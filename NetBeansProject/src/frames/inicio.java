@@ -44,6 +44,11 @@ public class inicio extends javax.swing.JFrame {
         jLabel_salas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/salas.png"))); // NOI18N
         jLabel_salas.setText(" Salas");
         jLabel_salas.setOpaque(true);
+        jLabel_salas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel_salasMouseReleased(evt);
+            }
+        });
         getContentPane().add(jLabel_salas);
         jLabel_salas.setBounds(100, 110, 320, 170);
 
@@ -60,6 +65,11 @@ public class inicio extends javax.swing.JFrame {
         jLabel_usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/usuario.png"))); // NOI18N
         jLabel_usuario.setText(" Usuário");
         jLabel_usuario.setOpaque(true);
+        jLabel_usuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel_usuarioMouseReleased(evt);
+            }
+        });
         getContentPane().add(jLabel_usuario);
         jLabel_usuario.setBounds(100, 390, 320, 170);
 
@@ -78,6 +88,16 @@ public class inicio extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jLabel_salasMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_salasMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel_salasMouseReleased
+
+    private void jLabel_usuarioMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_usuarioMouseReleased
+        // TODO add your handling code here:
+        new usuarios().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel_usuarioMouseReleased
 
     /**
      * @param args the command line arguments

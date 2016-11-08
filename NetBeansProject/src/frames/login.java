@@ -39,8 +39,8 @@ public class login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(932, 659));
         setPreferredSize(new java.awt.Dimension(932, 659));
-        setSize(new java.awt.Dimension(932, 659));
         setResizable(false);
+        setSize(new java.awt.Dimension(932, 659));
         getContentPane().setLayout(null);
 
         jTextField1.setText("Usuário");
@@ -92,6 +92,7 @@ public class login extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         new inicio().setVisible(true);// ***acionar só com autenticação
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
