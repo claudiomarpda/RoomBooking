@@ -54,6 +54,7 @@ public final class DatabaseHelper {
     // User table
     private static final String USER = "user";
     private static final String USER_ID = "id_user";
+    private static final String USER_PASSWORD = "password";
 
     // Floor table
     private static final String FLOOR = "floor";
@@ -236,8 +237,8 @@ public final class DatabaseHelper {
     private void setUserQueries() throws SQLException {
         addUserStatement = mConnection.prepareStatement(
                 "INSERT INTO " + USER
-                + "(" + USER_ID + ", " + CPF + "," + USER_TYPE + ")"
-                + "VALUES (?, ?, ?)");
+                + "(" + USER_ID + ", " + CPF + "," + USER_TYPE + "," + USER_PASSWORD + ")"
+                + "VALUES (?, ?, ?, ?)");
 
         rmUserStatement = mConnection.prepareStatement(
                 "DELETE FROM " + USER
@@ -251,7 +252,8 @@ public final class DatabaseHelper {
         final String allUsersQuery = "SELECT "
                 + USER_ID + ", " + USER_TYPE_ID + ", " + USER_TYPE_DESCRIPTION + ", "
                 + PERSON + "." + CPF + "," + NAME + ", " + GENDER + ", " + BIRTH + " ,"
-                + PHONE + "." + PHONE_NUMBER + ", " + EMAIL_ADDRESS + " FROM " + PERSON
+                + PHONE + "." + PHONE_NUMBER + ", " + EMAIL_ADDRESS + ", " + USER + "." + USER_PASSWORD
+                + " FROM " + PERSON
                 + " LEFT JOIN " + USER + " ON " + PERSON + "." + CPF + " = " + USER + "." + CPF
                 + " LEFT JOIN " + USER_TYPE + " ON " + USER + "." + USER_TYPE + " = " + USER_TYPE + "." + USER_TYPE_ID
                 + " LEFT JOIN " + PHONE + " ON " + PERSON + "." + CPF + " = " + PHONE + "." + CPF
@@ -425,11 +427,12 @@ public final class DatabaseHelper {
     /**
      * Creates an new user in User table.
      */
-    private void addUser(String userID, String cpf, int userTypeID) {
+    private void addUser(String userID, String cpf, int userTypeID, String password) {
         try {
             addUserStatement.setString(1, userID);
             addUserStatement.setString(2, cpf);
             addUserStatement.setInt(3, userTypeID);
+            addUserStatement.setString(4, password);
 
             //addUserStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -443,7 +446,7 @@ public final class DatabaseHelper {
      * tables.
      */
     public void addUser(String userID, String cpf, int userTypeID, String emailAddress,
-            String phoneNumber, String name, char gender, String birth) throws KeyExistsException {
+            String phoneNumber, String name, char gender, String birth, String password) throws KeyExistsException {
 
         if (userExists(userID)) {
             throw new KeyExistsException("User already exists");
@@ -452,7 +455,7 @@ public final class DatabaseHelper {
         addPerson(cpf, name, gender, birth);
         addEmail(cpf, emailAddress);
         addPhone(cpf, phoneNumber);
-        addUser(userID, cpf, userTypeID);
+        addUser(userID, cpf, userTypeID, password);
 
         try {
             addPersonStatement.executeUpdate();
@@ -720,7 +723,8 @@ public final class DatabaseHelper {
                     resultSet.getString(6),
                     resultSet.getDate(7),
                     resultSet.getString(8),
-                    resultSet.getString(9)
+                    resultSet.getString(9),
+                    resultSet.getString(10)
             );
             list.add(user);
         }
@@ -745,7 +749,7 @@ public final class DatabaseHelper {
             mResultSet = pStatement.executeQuery();
 
             if (!mResultSet.next()) { // if the search has no result
-                throw new KeyNotFoundException("Booking not found for key " + key);
+                throw new KeyNotFoundException("User not found for key '" + key + "'");
             }
 
             user = new User(
@@ -757,7 +761,8 @@ public final class DatabaseHelper {
                     mResultSet.getString(6),
                     mResultSet.getDate(7),
                     mResultSet.getString(8),
-                    mResultSet.getString(9)
+                    mResultSet.getString(9),
+                    mResultSet.getString(10)
             );
 
         } catch (SQLException ex) {

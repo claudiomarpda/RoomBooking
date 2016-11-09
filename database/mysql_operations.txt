@@ -203,8 +203,6 @@ DELETE FROM person WHERE cpf = "22222222222";
 DELETE FROM phone WHERE cpf = "...";
 DELETE FROM email WHERE cpf = "22222222222";
 
-TODO
-
 read user from table, instantiate and update
 
 select name, id_user, description from person, user, user_type;
@@ -214,3 +212,7 @@ select name, id_user, id_user from user LEFT JOIN person on user.cpf = person.cp
 select name, description, id_user from person left join user on person.cpf = user.cpf left join user_type on user.user_type = user_type.id_user_type;
 
 SELECT * FROM FLOOR LEFT JOIN ROOM ON FLOOR.ID_FLOOR = ROOM.FLOOR LEFT JOIN ROOM_TYPE ON ROOM_TYPE.ID_ROOM_TYPE = ROOM.ROOM_TYPE;
+
+ALTER TABLE `room_booking`.`user` 
+ADD COLUMN `password` VARCHAR(30) NULL AFTER `user_type`;
+

@@ -6,16 +6,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
- * This class is used for test cases. All methods are executed after
- * written.
+ *
+ * This class is used for test cases. All methods are executed after written.
  *
  * @author Claudiomar Araújo
  * @author Jonathan Rodrigues
  */
 public class RoomBooking {
 
-    public static void main(String[] args) throws KeyNotFoundException {
+    public static void main(String[] args) throws KeyNotFoundException, KeyExistsException {
         DatabaseHelper mDatabaseHelper = new DatabaseHelper();
 
         /**
@@ -113,10 +112,17 @@ public class RoomBooking {
         System.out.println(mDatabaseHelper.bookingExists("LAB-101", "2016-11-01 14:00:00"));
         
          */
+ 
+ 
+        //mDatabaseHelper.addUser("20169", "99999999999", 2, "admin@gmail.com", "083 9 9999-9999", "Administrador", 'M', "2000-01-01", "123");
+        /* 
+         (String userID, String cpf, int userTypeID, String emailAddress,
+             String phoneNumber, String name, char gender, String birth, String password)
+         */
         mDatabaseHelper.closeConnection();
         //dateTest();
     }
-    
+
     /**
      * For reference and test of java.sql.Date and java.util.Date.
      */
