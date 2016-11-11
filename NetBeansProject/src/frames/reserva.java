@@ -27,26 +27,23 @@ public class reserva extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabelID = new javax.swing.JLabel();
-        jLabelCpf = new javax.swing.JLabel();
-        jLabelEmail = new javax.swing.JLabel();
-        jLabelUser_type = new javax.swing.JLabel();
-        jLabelName = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        jLabelUsuario = new javax.swing.JLabel();
+        jLabelSala = new javax.swing.JLabel();
+        jLabelHora = new javax.swing.JLabel();
         jLabelData = new javax.swing.JLabel();
-        jLabelNumber = new javax.swing.JLabel();
-        jRadioButtonF = new javax.swing.JRadioButton();
-        jRadioButtonM = new javax.swing.JRadioButton();
+        jFormattedTextFieldHora = new javax.swing.JFormattedTextField();
         jFormattedTextFieldData = new javax.swing.JFormattedTextField();
-        jTextFieldId_user = new javax.swing.JTextField();
-        jTextFieldCpf = new javax.swing.JTextField();
-        jTextFieldUser_type = new javax.swing.JTextField();
-        jTextFieldName = new javax.swing.JTextField();
-        jTextFieldNumber = new javax.swing.JTextField();
-        jTextFieldEmail = new javax.swing.JTextField();
+        jTextFieldId_booking = new javax.swing.JTextField();
+        jTextFieldUsuario = new javax.swing.JTextField();
+        jTextFieldSala = new javax.swing.JTextField();
         jButtonEditar = new javax.swing.JButton();
         jButtonEditar1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextAreaObjetivo = new javax.swing.JTextArea();
+        jLabelObjetivo = new javax.swing.JLabel();
+        jSpinnerDemanda = new javax.swing.JSpinner();
+        jLabelDemanda = new javax.swing.JLabel();
         Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -61,89 +58,51 @@ public class reserva extends javax.swing.JFrame {
         getContentPane().add(jLabelID);
         jLabelID.setBounds(70, 60, 34, 16);
 
-        jLabelCpf.setForeground(new java.awt.Color(240, 240, 240));
-        jLabelCpf.setText("CPF");
-        getContentPane().add(jLabelCpf);
-        jLabelCpf.setBounds(70, 130, 34, 16);
+        jLabelUsuario.setForeground(new java.awt.Color(240, 240, 240));
+        jLabelUsuario.setText("Usuário");
+        getContentPane().add(jLabelUsuario);
+        jLabelUsuario.setBounds(70, 130, 70, 16);
 
-        jLabelEmail.setForeground(new java.awt.Color(240, 240, 240));
-        jLabelEmail.setText("Email");
-        getContentPane().add(jLabelEmail);
-        jLabelEmail.setBounds(70, 560, 34, 16);
+        jLabelSala.setForeground(new java.awt.Color(240, 240, 240));
+        jLabelSala.setText("Sala");
+        getContentPane().add(jLabelSala);
+        jLabelSala.setBounds(70, 200, 80, 16);
 
-        jLabelUser_type.setForeground(new java.awt.Color(240, 240, 240));
-        jLabelUser_type.setText("Tipo de Usuário");
-        getContentPane().add(jLabelUser_type);
-        jLabelUser_type.setBounds(70, 200, 80, 16);
-
-        jLabelName.setForeground(new java.awt.Color(240, 240, 240));
-        jLabelName.setText("Nome");
-        getContentPane().add(jLabelName);
-        jLabelName.setBounds(70, 270, 34, 16);
-
-        jLabel1.setForeground(new java.awt.Color(240, 240, 240));
-        jLabel1.setText("Genero");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(70, 340, 60, 16);
+        jLabelHora.setForeground(new java.awt.Color(240, 240, 240));
+        jLabelHora.setText("Hora");
+        getContentPane().add(jLabelHora);
+        jLabelHora.setBounds(200, 400, 40, 16);
 
         jLabelData.setForeground(new java.awt.Color(240, 240, 240));
-        jLabelData.setText("Data de Nascimento");
+        jLabelData.setText("Data");
         getContentPane().add(jLabelData);
-        jLabelData.setBounds(70, 410, 130, 16);
+        jLabelData.setBounds(70, 400, 40, 16);
 
-        jLabelNumber.setForeground(new java.awt.Color(240, 240, 240));
-        jLabelNumber.setText("Telefone");
-        getContentPane().add(jLabelNumber);
-        jLabelNumber.setBounds(70, 490, 80, 16);
-
-        buttonGroup1.add(jRadioButtonF);
-        jRadioButtonF.setForeground(new java.awt.Color(240, 240, 240));
-        jRadioButtonF.setText("Feminino");
-        jRadioButtonF.setEnabled(false);
-        jRadioButtonF.setOpaque(false);
-        getContentPane().add(jRadioButtonF);
-        jRadioButtonF.setBounds(180, 370, 80, 28);
-
-        buttonGroup1.add(jRadioButtonM);
-        jRadioButtonM.setForeground(new java.awt.Color(240, 240, 240));
-        jRadioButtonM.setText("Masculino");
-        jRadioButtonM.setEnabled(false);
-        jRadioButtonM.setOpaque(false);
-        getContentPane().add(jRadioButtonM);
-        jRadioButtonM.setBounds(70, 370, 80, 28);
+        jFormattedTextFieldHora.setEditable(false);
+        jFormattedTextFieldHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT))));
+        jFormattedTextFieldHora.setText("HH:mm");
+        jFormattedTextFieldHora.setPreferredSize(new java.awt.Dimension(270, 30));
+        getContentPane().add(jFormattedTextFieldHora);
+        jFormattedTextFieldHora.setBounds(200, 420, 90, 30);
 
         jFormattedTextFieldData.setEditable(false);
         jFormattedTextFieldData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
         jFormattedTextFieldData.setText("DD/MM/AAAA");
         jFormattedTextFieldData.setPreferredSize(new java.awt.Dimension(270, 30));
         getContentPane().add(jFormattedTextFieldData);
-        jFormattedTextFieldData.setBounds(70, 430, 90, 30);
+        jFormattedTextFieldData.setBounds(70, 420, 90, 30);
 
-        jTextFieldId_user.setEditable(false);
-        getContentPane().add(jTextFieldId_user);
-        jTextFieldId_user.setBounds(70, 80, 270, 30);
+        jTextFieldId_booking.setEditable(false);
+        getContentPane().add(jTextFieldId_booking);
+        jTextFieldId_booking.setBounds(70, 80, 270, 30);
 
-        jTextFieldCpf.setEditable(false);
-        getContentPane().add(jTextFieldCpf);
-        jTextFieldCpf.setBounds(70, 150, 270, 30);
+        jTextFieldUsuario.setEditable(false);
+        getContentPane().add(jTextFieldUsuario);
+        jTextFieldUsuario.setBounds(70, 150, 270, 30);
 
-        jTextFieldUser_type.setEditable(false);
-        getContentPane().add(jTextFieldUser_type);
-        jTextFieldUser_type.setBounds(70, 220, 270, 30);
-
-        jTextFieldName.setEditable(false);
-        jTextFieldName.setPreferredSize(new java.awt.Dimension(270, 30));
-        getContentPane().add(jTextFieldName);
-        jTextFieldName.setBounds(70, 290, 270, 30);
-
-        jTextFieldNumber.setEditable(false);
-        getContentPane().add(jTextFieldNumber);
-        jTextFieldNumber.setBounds(70, 510, 270, 30);
-
-        jTextFieldEmail.setEditable(false);
-        jTextFieldEmail.setPreferredSize(new java.awt.Dimension(270, 30));
-        getContentPane().add(jTextFieldEmail);
-        jTextFieldEmail.setBounds(70, 580, 270, 30);
+        jTextFieldSala.setEditable(false);
+        getContentPane().add(jTextFieldSala);
+        jTextFieldSala.setBounds(70, 220, 270, 30);
 
         jButtonEditar.setText("Editar");
         jButtonEditar.setOpaque(false);
@@ -154,6 +113,30 @@ public class reserva extends javax.swing.JFrame {
         jButtonEditar1.setOpaque(false);
         getContentPane().add(jButtonEditar1);
         jButtonEditar1.setBounds(780, 580, 90, 32);
+
+        jTextAreaObjetivo.setEditable(false);
+        jTextAreaObjetivo.setColumns(20);
+        jTextAreaObjetivo.setRows(5);
+        jScrollPane1.setViewportView(jTextAreaObjetivo);
+
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(70, 290, 270, 83);
+
+        jLabelObjetivo.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelObjetivo.setText("Objetivo");
+        getContentPane().add(jLabelObjetivo);
+        jLabelObjetivo.setBounds(70, 270, 60, 16);
+
+        jSpinnerDemanda.setModel(new javax.swing.SpinnerNumberModel());
+        jSpinnerDemanda.setToolTipText("Quantidade esperada de pessoas a ocuparem a sala.");
+        getContentPane().add(jSpinnerDemanda);
+        jSpinnerDemanda.setBounds(70, 500, 70, 26);
+
+        jLabelDemanda.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelDemanda.setText("Demanda");
+        jLabelDemanda.setToolTipText("Quantidade esperada de pessoas a ocuparem a sala.");
+        getContentPane().add(jLabelDemanda);
+        jLabelDemanda.setBounds(70, 480, 70, 16);
 
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
         getContentPane().add(Background);
@@ -200,25 +183,22 @@ public class reserva extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Background;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButtonEditar;
     private javax.swing.JButton jButtonEditar1;
     private javax.swing.JFormattedTextField jFormattedTextFieldData;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabelCpf;
+    private javax.swing.JFormattedTextField jFormattedTextFieldHora;
     private javax.swing.JLabel jLabelData;
-    private javax.swing.JLabel jLabelEmail;
+    private javax.swing.JLabel jLabelDemanda;
+    private javax.swing.JLabel jLabelHora;
     private javax.swing.JLabel jLabelID;
-    private javax.swing.JLabel jLabelName;
-    private javax.swing.JLabel jLabelNumber;
-    private javax.swing.JLabel jLabelUser_type;
-    private javax.swing.JRadioButton jRadioButtonF;
-    private javax.swing.JRadioButton jRadioButtonM;
-    private javax.swing.JTextField jTextFieldCpf;
-    private javax.swing.JTextField jTextFieldEmail;
-    private javax.swing.JTextField jTextFieldId_user;
-    private javax.swing.JTextField jTextFieldName;
-    private javax.swing.JTextField jTextFieldNumber;
-    private javax.swing.JTextField jTextFieldUser_type;
+    private javax.swing.JLabel jLabelObjetivo;
+    private javax.swing.JLabel jLabelSala;
+    private javax.swing.JLabel jLabelUsuario;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSpinner jSpinnerDemanda;
+    private javax.swing.JTextArea jTextAreaObjetivo;
+    private javax.swing.JTextField jTextFieldId_booking;
+    private javax.swing.JTextField jTextFieldSala;
+    private javax.swing.JTextField jTextFieldUsuario;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,7 +12,7 @@ import javax.swing.DefaultListModel;
  * @author Jonathan
  */
 public class usuarios extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form usuarios
      */
