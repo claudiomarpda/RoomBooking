@@ -12,7 +12,7 @@ package frames;
 public class reserva extends javax.swing.JFrame {
 
     /**
-     * Creates new form usuario
+     * Creates new form reserva
      */
     public reserva() {
         initComponents();
@@ -30,120 +30,83 @@ public class reserva extends javax.swing.JFrame {
         jLabelID = new javax.swing.JLabel();
         jLabelUsuario = new javax.swing.JLabel();
         jLabelSala = new javax.swing.JLabel();
-        jLabelHora = new javax.swing.JLabel();
+        jLabelObjetivo = new javax.swing.JLabel();
         jLabelData = new javax.swing.JLabel();
-        jFormattedTextFieldHora = new javax.swing.JFormattedTextField();
-        jFormattedTextFieldData = new javax.swing.JFormattedTextField();
-        jTextFieldId_booking = new javax.swing.JTextField();
+        jLabelHora = new javax.swing.JLabel();
+        jLabelDemanda = new javax.swing.JLabel();
+        jTextFieldID1 = new javax.swing.JTextField();
         jTextFieldUsuario = new javax.swing.JTextField();
         jTextFieldSala = new javax.swing.JTextField();
-        jButtonEditar = new javax.swing.JButton();
-        jButtonEditar1 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextAreaObjetivo = new javax.swing.JTextArea();
-        jLabelObjetivo = new javax.swing.JLabel();
+        jScrollPaneObejtivo = new javax.swing.JScrollPane();
+        jTextPaneObjetivo = new javax.swing.JTextPane();
+        jFormattedTextFieldData = new javax.swing.JFormattedTextField();
+        jFormattedTextFieldHora = new javax.swing.JFormattedTextField();
         jSpinnerDemanda = new javax.swing.JSpinner();
-        jLabelDemanda = new javax.swing.JLabel();
-        Background = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(932, 659));
-        setMinimumSize(new java.awt.Dimension(932, 659));
-        setResizable(false);
-        setSize(new java.awt.Dimension(932, 670));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
-        jLabelID.setForeground(new java.awt.Color(240, 240, 240));
         jLabelID.setText("ID");
         getContentPane().add(jLabelID);
-        jLabelID.setBounds(70, 60, 34, 16);
+        jLabelID.setBounds(70, 70, 69, 16);
 
-        jLabelUsuario.setForeground(new java.awt.Color(240, 240, 240));
         jLabelUsuario.setText("Usuário");
         getContentPane().add(jLabelUsuario);
-        jLabelUsuario.setBounds(70, 130, 70, 16);
+        jLabelUsuario.setBounds(70, 140, 44, 16);
 
-        jLabelSala.setForeground(new java.awt.Color(240, 240, 240));
         jLabelSala.setText("Sala");
         getContentPane().add(jLabelSala);
-        jLabelSala.setBounds(70, 200, 80, 16);
+        jLabelSala.setBounds(70, 210, 25, 16);
 
-        jLabelHora.setForeground(new java.awt.Color(240, 240, 240));
-        jLabelHora.setText("Hora");
-        getContentPane().add(jLabelHora);
-        jLabelHora.setBounds(200, 400, 40, 16);
-
-        jLabelData.setForeground(new java.awt.Color(240, 240, 240));
-        jLabelData.setText("Data");
-        getContentPane().add(jLabelData);
-        jLabelData.setBounds(70, 400, 40, 16);
-
-        jFormattedTextFieldHora.setEditable(false);
-        jFormattedTextFieldHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT))));
-        jFormattedTextFieldHora.setText("HH:mm");
-        jFormattedTextFieldHora.setPreferredSize(new java.awt.Dimension(270, 30));
-        getContentPane().add(jFormattedTextFieldHora);
-        jFormattedTextFieldHora.setBounds(200, 420, 90, 30);
-
-        jFormattedTextFieldData.setEditable(false);
-        jFormattedTextFieldData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
-        jFormattedTextFieldData.setText("DD/MM/AAAA");
-        jFormattedTextFieldData.setPreferredSize(new java.awt.Dimension(270, 30));
-        getContentPane().add(jFormattedTextFieldData);
-        jFormattedTextFieldData.setBounds(70, 420, 90, 30);
-
-        jTextFieldId_booking.setEditable(false);
-        getContentPane().add(jTextFieldId_booking);
-        jTextFieldId_booking.setBounds(70, 80, 270, 30);
-
-        jTextFieldUsuario.setEditable(false);
-        getContentPane().add(jTextFieldUsuario);
-        jTextFieldUsuario.setBounds(70, 150, 270, 30);
-
-        jTextFieldSala.setEditable(false);
-        getContentPane().add(jTextFieldSala);
-        jTextFieldSala.setBounds(70, 220, 270, 30);
-
-        jButtonEditar.setText("Editar");
-        jButtonEditar.setOpaque(false);
-        getContentPane().add(jButtonEditar);
-        jButtonEditar.setBounds(780, 530, 90, 32);
-
-        jButtonEditar1.setText("Reservas");
-        jButtonEditar1.setOpaque(false);
-        getContentPane().add(jButtonEditar1);
-        jButtonEditar1.setBounds(780, 580, 90, 32);
-
-        jTextAreaObjetivo.setEditable(false);
-        jTextAreaObjetivo.setColumns(20);
-        jTextAreaObjetivo.setRows(5);
-        jScrollPane1.setViewportView(jTextAreaObjetivo);
-
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(70, 290, 270, 83);
-
-        jLabelObjetivo.setForeground(new java.awt.Color(255, 255, 255));
         jLabelObjetivo.setText("Objetivo");
         getContentPane().add(jLabelObjetivo);
-        jLabelObjetivo.setBounds(70, 270, 60, 16);
+        jLabelObjetivo.setBounds(70, 280, 46, 16);
+
+        jLabelData.setText("Data");
+        getContentPane().add(jLabelData);
+        jLabelData.setBounds(70, 390, 26, 16);
+
+        jLabelHora.setText("Hora");
+        getContentPane().add(jLabelHora);
+        jLabelHora.setBounds(180, 390, 27, 16);
+
+        jLabelDemanda.setText("Demanda");
+        jLabelDemanda.setToolTipText("Quantidade de pessoas a ocupar a sala.");
+        getContentPane().add(jLabelDemanda);
+        jLabelDemanda.setBounds(70, 460, 54, 16);
+
+        jTextFieldID1.setPreferredSize(new java.awt.Dimension(270, 24));
+        getContentPane().add(jTextFieldID1);
+        jTextFieldID1.setBounds(71, 96, 270, 24);
+
+        jTextFieldUsuario.setPreferredSize(new java.awt.Dimension(270, 24));
+        getContentPane().add(jTextFieldUsuario);
+        jTextFieldUsuario.setBounds(71, 166, 270, 24);
+
+        jTextFieldSala.setPreferredSize(new java.awt.Dimension(270, 24));
+        getContentPane().add(jTextFieldSala);
+        jTextFieldSala.setBounds(71, 236, 270, 24);
+
+        jScrollPaneObejtivo.setViewportView(jTextPaneObjetivo);
+
+        getContentPane().add(jScrollPaneObejtivo);
+        jScrollPaneObejtivo.setBounds(71, 306, 270, 65);
+
+        jFormattedTextFieldData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+        jFormattedTextFieldData.setText("DD/MM/AAAA");
+        getContentPane().add(jFormattedTextFieldData);
+        jFormattedTextFieldData.setBounds(71, 417, 90, 20);
+
+        jFormattedTextFieldHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT))));
+        jFormattedTextFieldHora.setText("HH:mm");
+        getContentPane().add(jFormattedTextFieldHora);
+        jFormattedTextFieldHora.setBounds(179, 417, 91, 20);
 
         jSpinnerDemanda.setModel(new javax.swing.SpinnerNumberModel());
-        jSpinnerDemanda.setToolTipText("Quantidade esperada de pessoas a ocuparem a sala.");
         getContentPane().add(jSpinnerDemanda);
-        jSpinnerDemanda.setBounds(70, 500, 70, 26);
-
-        jLabelDemanda.setForeground(new java.awt.Color(255, 255, 255));
-        jLabelDemanda.setText("Demanda");
-        jLabelDemanda.setToolTipText("Quantidade esperada de pessoas a ocuparem a sala.");
-        getContentPane().add(jLabelDemanda);
-        jLabelDemanda.setBounds(70, 480, 70, 16);
-
-        Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
-        getContentPane().add(Background);
-        Background.setBounds(0, 0, 932, 659);
+        jSpinnerDemanda.setBounds(71, 483, 54, 26);
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -176,15 +139,12 @@ public class reserva extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new usuario().setVisible(true);
+                new reserva().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Background;
-    private javax.swing.JButton jButtonEditar;
-    private javax.swing.JButton jButtonEditar1;
     private javax.swing.JFormattedTextField jFormattedTextFieldData;
     private javax.swing.JFormattedTextField jFormattedTextFieldHora;
     private javax.swing.JLabel jLabelData;
@@ -194,11 +154,11 @@ public class reserva extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelObjetivo;
     private javax.swing.JLabel jLabelSala;
     private javax.swing.JLabel jLabelUsuario;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPaneObejtivo;
     private javax.swing.JSpinner jSpinnerDemanda;
-    private javax.swing.JTextArea jTextAreaObjetivo;
-    private javax.swing.JTextField jTextFieldId_booking;
+    private javax.swing.JTextField jTextFieldID1;
     private javax.swing.JTextField jTextFieldSala;
     private javax.swing.JTextField jTextFieldUsuario;
+    private javax.swing.JTextPane jTextPaneObjetivo;
     // End of variables declaration//GEN-END:variables
 }
