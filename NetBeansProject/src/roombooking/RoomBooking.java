@@ -6,16 +6,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
- * This class is used for test cases. All methods are executed after
- * written.
- *
- * @author Claudiomar Araújo
- * @author Jonathan Rodrigues
+ * This class is used for test cases. All methods are executed after written.
  */
 public class RoomBooking {
 
-    public static void main(String[] args) throws KeyNotFoundException {
+    public static void main(String[] args) throws KeyNotFoundException, KeyExistsException {
         DatabaseHelper mDatabaseHelper = new DatabaseHelper();
 
         /**
@@ -28,8 +23,8 @@ public class RoomBooking {
         //mDatabaseHelper.addRoomType("AUL", "Aula");
         //mDatabaseHelper.addUserType(2, "Aluno");
         //mDatabaseHelper.addUser("2015000000", "22222222222", 2);
-        //mDatabaseHelper.addUser("20163", "55555555555", 2, "jonathan@gmail.com", 
-        //    "083 9 2222-1111", "Jonathan", 'M', "1994-01-01");
+        // mDatabaseHelper.addUser("20163", "112", 2, "jonathan@gmail.com", 
+        //    "083 9 2222-1111", "Jonathan", 'M', "1994-01-01", "123");
         //mDatabaseHelper.addRoom("LAB-102", "LAB", 1, 60, 0, 30);
         // mDatabaseHelper.removePerson("22222222222");
         //mDatabaseHelper.addBooking("2016111111", "LAB-101", "Monitoria Banco de Dados I", 10, "2016-11-01 02:00 PM");
@@ -47,7 +42,7 @@ public class RoomBooking {
         // mDatabaseHelper.addRoomType("AUD", "Auditório");
         //mDatabaseHelper.removeRoom("AUD-001");
         //mDatabaseHelper.printSelectEverythingFromPerson();
-        //System.out.println(mDatabaseHelper.userExists("2016000000"));
+        ///System.out.println(mDatabaseHelper.userExists("2016000000"));
         //mDatabaseHelper.updatePerson("55555555555", p);
         /**
          * ********** Classes instance tests ***********
@@ -113,10 +108,24 @@ public class RoomBooking {
         System.out.println(mDatabaseHelper.bookingExists("LAB-101", "2016-11-01 14:00:00"));
         
          */
+        //mDatabaseHelper.addUser("20169", "99999999999", 2, "admin@gmail.com", "083 9 9999-9999", "Administrador", 'M', "2000-01-01", "123");
+        /* 
+         (String userID, String cpf, int userTypeID, String emailAddress,
+             String phoneNumber, String name, char gender, String birth, String password)
+         */
+        /**
+         * ********** UPDATE operations ***********
+         */
+        /*
+        User u = mDatabaseHelper.getUserByCPF("112");
+        u.setCpf("119");
+        mDatabaseHelper.updateUser(u.getUserID(), u);
+         
         mDatabaseHelper.closeConnection();
+        */
         //dateTest();
     }
-    
+
     /**
      * For reference and test of java.sql.Date and java.util.Date.
      */

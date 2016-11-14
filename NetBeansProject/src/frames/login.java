@@ -1,10 +1,10 @@
 package frames;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import roombooking.DatabaseHelper;
+import roombooking.KeyNotFoundException;
+import roombooking.User;
 
 /**
  *
@@ -12,11 +12,15 @@ package frames;
  */
 public class login extends javax.swing.JFrame {
 
+    private DatabaseHelper mDatabaseHelper;
+
     /**
      * Creates new form login
      */
     public login() {
+        mDatabaseHelper = new DatabaseHelper();
         initComponents();
+        jFeedBackLabel.setVisible(false);
     }
 
     /**
@@ -28,12 +32,13 @@ public class login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        jUserTextField = new javax.swing.JTextField();
+        jPasswordField = new javax.swing.JPasswordField();
+        jLoginButton = new javax.swing.JButton();
         reserva = new javax.swing.JLabel();
         ci = new javax.swing.JLabel();
         uf = new javax.swing.JLabel();
+        jFeedBackLabel = new javax.swing.JLabel();
         Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -43,25 +48,30 @@ public class login extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(932, 659));
         getContentPane().setLayout(null);
 
-        jTextField1.setText("Usuário");
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(326, 270, 280, 30);
-
-        jPasswordField1.setPreferredSize(new java.awt.Dimension(42, 20));
-        getContentPane().add(jPasswordField1);
-        jPasswordField1.setBounds(326, 330, 280, 30);
-
-        jButton1.setText("Login");
-        jButton1.setBorderPainted(false);
-        jButton1.setOpaque(false);
-        jButton1.setPreferredSize(new java.awt.Dimension(60, 23));
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jUserTextField.setText("Usuário");
+        jUserTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jUserTextFieldActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1);
-        jButton1.setBounds(430, 390, 60, 23);
+        getContentPane().add(jUserTextField);
+        jUserTextField.setBounds(326, 270, 280, 30);
+
+        jPasswordField.setPreferredSize(new java.awt.Dimension(42, 20));
+        getContentPane().add(jPasswordField);
+        jPasswordField.setBounds(326, 330, 280, 30);
+
+        jLoginButton.setText("Login");
+        jLoginButton.setBorderPainted(false);
+        jLoginButton.setOpaque(false);
+        jLoginButton.setPreferredSize(new java.awt.Dimension(60, 23));
+        jLoginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jLoginButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jLoginButton);
+        jLoginButton.setBounds(430, 390, 60, 23);
 
         reserva.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         reserva.setForeground(new java.awt.Color(255, 255, 255));
@@ -81,7 +91,16 @@ public class login extends javax.swing.JFrame {
         getContentPane().add(uf);
         uf.setBounds(330, 160, 290, 20);
 
+        jFeedBackLabel.setForeground(new java.awt.Color(255, 153, 153));
+        jFeedBackLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jFeedBackLabel.setText("sdadsd");
+        jFeedBackLabel.setToolTipText("");
+        getContentPane().add(jFeedBackLabel);
+        jFeedBackLabel.setBounds(330, 460, 260, 16);
+
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
+        Background.setFocusable(false);
+        Background.setRequestFocusEnabled(false);
         getContentPane().add(Background);
         Background.setBounds(0, 0, 932, 659);
 
@@ -89,11 +108,59 @@ public class login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /**
+     * Starts when there is an event from login button. Verifies the login and
+     * password from user input. If the user is authenticated, starts the
+     * initial screen.
+     *
+     * @param evt from button when clicked
+     */
+    private void jLoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLoginButtonActionPerformed
+
+        // Gets input from user.
+        final String loginInput = jUserTextField.getText();
+        final String passwordInput = String.valueOf(jPasswordField.getPassword());
+        
+        // Checks if some input field is missing.
+        if (loginInput.equals("") || passwordInput.equals("")) {
+            jFeedBackLabel.setVisible(true);
+            jFeedBackLabel.setText("Preencha os campos corretamente.");
+        } else {
+
+            User user = null;
+            try {
+                user = mDatabaseHelper.getUserByID(loginInput);
+                if (user.getUserID().equals(loginInput)) {
+                    if (passwordInput.equals(user.getPassword())) {
+                        startsInitialScreen(user);
+                    } else {
+                        jFeedBackLabel.setVisible(true);
+                        jFeedBackLabel.setText("Senha inválida.");
+                    }
+                }
+            } catch (KeyNotFoundException ex) {
+                try {
+                    user = mDatabaseHelper.getUserByCPF(loginInput);
+                    startsInitialScreen(user);
+                } catch (KeyNotFoundException ex1) {
+                    Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex1);
+                    jFeedBackLabel.setVisible(true);
+                    jFeedBackLabel.setText("Usuário ou senha inválidos.");
+                }
+                Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jLoginButtonActionPerformed
+
+    private void startsInitialScreen(User user) {
+        inicio mInicio = new inicio(mDatabaseHelper, user);
+        this.dispose();
+        mInicio.setVisible(true);
+    }
+
+    private void jUserTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUserTextFieldActionPerformed
         // TODO add your handling code here:
-        new inicio().setVisible(true);// ***acionar só com autenticação
-        this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jUserTextFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -130,12 +197,14 @@ public class login extends javax.swing.JFrame {
         });
     }
 
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Background;
     private javax.swing.JLabel ci;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel jFeedBackLabel;
+    private javax.swing.JButton jLoginButton;
+    private javax.swing.JPasswordField jPasswordField;
+    private javax.swing.JTextField jUserTextField;
     private javax.swing.JLabel reserva;
     private javax.swing.JLabel uf;
     // End of variables declaration//GEN-END:variables

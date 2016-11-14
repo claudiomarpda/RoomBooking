@@ -32,9 +32,9 @@ CREATE TABLE `booking` (
   PRIMARY KEY (`id_booking`),
   KEY `room_fk_idx` (`room`),
   KEY `user_fk_idx` (`user`),
-  CONSTRAINT `room_fk` FOREIGN KEY (`room`) REFERENCES `room` (`id_room`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `user_fk` FOREIGN KEY (`user`) REFERENCES `user` (`id_user`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  CONSTRAINT `room_fk` FOREIGN KEY (`room`) REFERENCES `room` (`id_room`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `user_fk` FOREIGN KEY (`user`) REFERENCES `user` (`id_user`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,6 @@ CREATE TABLE `booking` (
 
 LOCK TABLES `booking` WRITE;
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
-INSERT INTO `booking` VALUES (2,'2016111111','LAB-101','Monitoria Banco de Dados I',10,'2016-11-01 14:00:00'),(3,'2016111111','LAB-101','Monitoria Banco de Dados I',10,'2016-11-01 14:00:00');
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,8 +56,8 @@ DROP TABLE IF EXISTS `email`;
 CREATE TABLE `email` (
   `cpf` char(11) NOT NULL,
   `address` tinytext,
-  KEY `cpf` (`cpf`),
-  CONSTRAINT `email_ibfk_1` FOREIGN KEY (`cpf`) REFERENCES `person` (`cpf`) ON DELETE CASCADE ON UPDATE NO ACTION
+  KEY `email_ibfk_1` (`cpf`),
+  CONSTRAINT `email_ibfk_1` FOREIGN KEY (`cpf`) REFERENCES `person` (`cpf`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -68,7 +67,7 @@ CREATE TABLE `email` (
 
 LOCK TABLES `email` WRITE;
 /*!40000 ALTER TABLE `email` DISABLE KEYS */;
-INSERT INTO `email` VALUES ('55555555555','jonathan@gmail.com');
+INSERT INTO `email` VALUES ('99999999999','admin@gmail.com'),('112','jonathan@gmail.com');
 /*!40000 ALTER TABLE `email` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +117,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('11111111111','Thiago Maritan Ugulino Araújo','M','1980-01-01'),('44444444444','Jonathan','M','1994-01-01'),('55555555555','Jonathan','M','1994-01-01');
+INSERT INTO `person` VALUES ('11111111111','Thiago Maritan Ugulino Araújo','M','1980-01-01'),('112','Jonathan','M','1994-01-01'),('99999999999','Administrador','M','2000-01-01');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +132,7 @@ CREATE TABLE `phone` (
   `cpf` char(11) NOT NULL,
   `number` varchar(20) DEFAULT NULL,
   KEY `phone_ibfk_1` (`cpf`),
-  CONSTRAINT `phone_ibfk_1` FOREIGN KEY (`cpf`) REFERENCES `person` (`cpf`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `phone_ibfk_1` FOREIGN KEY (`cpf`) REFERENCES `person` (`cpf`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,7 +142,7 @@ CREATE TABLE `phone` (
 
 LOCK TABLES `phone` WRITE;
 /*!40000 ALTER TABLE `phone` DISABLE KEYS */;
-INSERT INTO `phone` VALUES ('55555555555','083 9 2222-1111');
+INSERT INTO `phone` VALUES ('99999999999','083 9 9999-9999'),('112','083 9 2222-1111');
 /*!40000 ALTER TABLE `phone` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,8 +163,8 @@ CREATE TABLE `room` (
   PRIMARY KEY (`id_room`),
   KEY `floor_idx` (`floor`),
   KEY `room_type_fk` (`room_type`),
-  CONSTRAINT `floor` FOREIGN KEY (`floor`) REFERENCES `floor` (`id_floor`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `room_type_fk` FOREIGN KEY (`room_type`) REFERENCES `room_type` (`id_room_type`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `floor` FOREIGN KEY (`floor`) REFERENCES `floor` (`id_floor`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `room_type_fk` FOREIGN KEY (`room_type`) REFERENCES `room_type` (`id_room_type`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -214,6 +213,7 @@ CREATE TABLE `user` (
   `id_user` varchar(20) NOT NULL,
   `cpf` char(11) NOT NULL,
   `user_type` tinyint(4) unsigned DEFAULT NULL,
+  `password` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`id_user`),
   KEY `user_type_idx` (`user_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -225,7 +225,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('2016000000','11111111111',1),('2016111111','22222222222',2),('20163','55555555555',2);
+INSERT INTO `user` VALUES ('2016000000','11111111111',1,'123'),('20163','112',2,'123'),('20169','99999999999',2,'123');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -262,4 +262,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-08  9:47:12
+-- Dump completed on 2016-11-14 11:06:59
