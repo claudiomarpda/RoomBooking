@@ -216,3 +216,51 @@ SELECT * FROM FLOOR LEFT JOIN ROOM ON FLOOR.ID_FLOOR = ROOM.FLOOR LEFT JOIN ROOM
 ALTER TABLE `room_booking`.`user` 
 ADD COLUMN `password` VARCHAR(30) NULL AFTER `user_type`;
 
+ALTER TABLE `room_booking`.`booking` 
+DROP FOREIGN KEY `room_fk`,
+DROP FOREIGN KEY `user_fk`;
+ALTER TABLE `room_booking`.`booking` 
+ADD CONSTRAINT `room_fk`
+  FOREIGN KEY (`room`)
+  REFERENCES `room_booking`.`room` (`id_room`)
+  ON DELETE NO ACTION
+  ON UPDATE CASCADE,
+ADD CONSTRAINT `user_fk`
+  FOREIGN KEY (`user`)
+  REFERENCES `room_booking`.`user` (`id_user`)
+  ON DELETE NO ACTION
+  ON UPDATE CASCADE;
+
+ALTER TABLE `room_booking`.`email` 
+DROP FOREIGN KEY `email_ibfk_1`;
+ALTER TABLE `room_booking`.`email` 
+ADD CONSTRAINT `email_ibfk_1`
+  FOREIGN KEY (`cpf`)
+  REFERENCES `room_booking`.`person` (`cpf`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+ALTER TABLE `room_booking`.`phone` 
+DROP FOREIGN KEY `phone_ibfk_1`;
+ALTER TABLE `room_booking`.`phone` 
+ADD CONSTRAINT `phone_ibfk_1`
+  FOREIGN KEY (`cpf`)
+  REFERENCES `room_booking`.`person` (`cpf`)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE;
+
+ALTER TABLE `room_booking`.`room` 
+DROP FOREIGN KEY `floor`,
+DROP FOREIGN KEY `room_type_fk`;
+ALTER TABLE `room_booking`.`room` 
+ADD CONSTRAINT `floor`
+  FOREIGN KEY (`floor`)
+  REFERENCES `room_booking`.`floor` (`id_floor`)
+  ON DELETE SET NULL
+  ON UPDATE CASCADE,
+ADD CONSTRAINT `room_type_fk`
+  FOREIGN KEY (`room_type`)
+  REFERENCES `room_booking`.`room_type` (`id_room_type`)
+  ON DELETE SET NULL
+  ON UPDATE CASCADE;
+

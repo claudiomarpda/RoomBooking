@@ -13,9 +13,6 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Claudiomar Araújo
- * @author Jonathan Rodrigues
- *
  * DatabaseHelper provides CRUD operations in a MySQL database. This class is
  * easily understood after checking the documentation. Therefore, we write
  * comments only when necessary. For details about the database, see the
@@ -105,6 +102,9 @@ public final class DatabaseHelper {
 
     // Update queries
     private PreparedStatement upPersonStatement;
+    private PreparedStatement upUserStatement;
+    private PreparedStatement upPhoneStatement;
+    private PreparedStatement upEmailStatement;
 
     // Read queries
     private PreparedStatement readUserByCPFStatement;
@@ -118,8 +118,6 @@ public final class DatabaseHelper {
     private PreparedStatement checkUserExistence;
     private PreparedStatement checkBookingExistence;
 
-    private Statement mStatement;
-
     /**
      * Constructor connects to the database and initializes PreparedStatement
      * for queries handling.
@@ -128,7 +126,6 @@ public final class DatabaseHelper {
         connect();
 
         try {
-            mStatement = mConnection.createStatement();
 
             setPersonQueries();
             setEmailQueries();
@@ -195,7 +192,7 @@ public final class DatabaseHelper {
                 + CPF + " = ?, "
                 + NAME + " = ?, "
                 + GENDER + " = ?, "
-                + BIRTH + " = ?, "
+                + BIRTH + " = ? "
                 + "WHERE " + CPF + " = ?"
         );
 
@@ -210,6 +207,13 @@ public final class DatabaseHelper {
         rmPhoneStatement = mConnection.prepareStatement(
                 "DELETE FROM " + PHONE
                 + " WHERE " + CPF + " = ?");
+
+        upPhoneStatement = mConnection.prepareStatement(
+                "UPDATE " + PHONE + " SET "
+                //+ CPF + " = ?, "
+                + PHONE_NUMBER + " = ? "
+                + "WHERE " + CPF + " = ?"
+        );
     }
 
     private void setEmailQueries() throws SQLException {
@@ -221,6 +225,13 @@ public final class DatabaseHelper {
         rmEmailStatement = mConnection.prepareStatement(
                 "DELETE FROM " + EMAIL
                 + " WHERE " + CPF + " = ?");
+
+        upEmailStatement = mConnection.prepareStatement(
+                "UPDATE " + EMAIL + " SET "
+                //+ CPF + " = ?, "
+                + EMAIL_ADDRESS + " = ? "
+                + "WHERE " + CPF + " = ?"
+        );
     }
 
     private void setUserTypeQueries() throws SQLException {
@@ -245,8 +256,8 @@ public final class DatabaseHelper {
                 + " WHERE " + CPF + " = ?");
 
         checkUserExistence = mConnection.prepareStatement(
-                "(SELECT * FROM " + USER
-                + " WHERE " + USER_ID + " = ?)");
+                "SELECT * FROM " + USER + ", " + PERSON
+                + " WHERE " + USER_ID + " = ? OR " + PERSON + "." + CPF + "= ?");
 
         // The result columns type represents all attributes of User class
         final String allUsersQuery = "SELECT "
@@ -273,6 +284,14 @@ public final class DatabaseHelper {
                 + " WHERE " + USER + "." + USER_ID + " = ?"
         );
 
+        upUserStatement = mConnection.prepareStatement(
+                "UPDATE " + USER + " SET "
+                + USER_ID + " = ?, "
+                + CPF + " = ?, "
+                + USER_TYPE + " = ?, "
+                + USER_PASSWORD + " = ? "
+                + "WHERE " + USER_ID + " = ?"
+        );
     }
 
     private void setFloorQueries() throws SQLException {
@@ -391,7 +410,7 @@ public final class DatabaseHelper {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("addPhone successful.");
+        System.out.println("addEmail successful.");
     }
 
     /*
@@ -406,7 +425,7 @@ public final class DatabaseHelper {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("addEmail successful.");
+        System.out.println("addPhone successful.");
     }
 
     /*
@@ -421,7 +440,7 @@ public final class DatabaseHelper {
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("addFloor successful.");
+        System.out.println("addUserType successful.");
     }
 
     /**
@@ -448,7 +467,7 @@ public final class DatabaseHelper {
     public void addUser(String userID, String cpf, int userTypeID, String emailAddress,
             String phoneNumber, String name, char gender, String birth, String password) throws KeyExistsException {
 
-        if (userExists(userID)) {
+        if (userExists(userID, cpf)) {
             throw new KeyExistsException("User already exists");
         }
 
@@ -675,10 +694,11 @@ public final class DatabaseHelper {
         }
     }
 
-    public boolean userExists(String userID) {
+    public boolean userExists(String userID, String cpf) {
         ResultSet mResultSet = null;
         try {
             checkUserExistence.setString(1, userID);
+            checkUserExistence.setString(2, cpf);
             mResultSet = checkUserExistence.executeQuery();
             if (mResultSet.next()) {
                 return true;
@@ -993,40 +1013,29 @@ public final class DatabaseHelper {
     }
 
     /**
-     * For reference and test purpose.
+     * Updates person in the database.
+     *
+     * @param currentCPF is the CPF of the person to be updated.
+     * @param person has the new values for currentCPF.
      */
-    public void printSelectEverythingFromPerson() {
-        final String allPeople = "SELECT * FROM person";
-        ResultSet mResultSet = null;
+    private void updatePerson(String currentCPF, Person person) {
         try {
-            mResultSet = mStatement.executeQuery(allPeople);
-            int numberOfColumns = mResultSet.getMetaData().getColumnCount();
-            while (mResultSet.next()) {
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    System.out.printf("%-30s\t", mResultSet.getObject(i));
-                }
-                System.out.println();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                mResultSet.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    /*
-    public void updatePerson(String currentCPF, Person p) {
-        try {
-            upPersonStatement.setString(1, p.getCpf());
-            upPersonStatement.setString(2, p.getName());
-            upPersonStatement.setString(3, String.valueOf(p.getGender()));
-            upPersonStatement.setDate(4, p.getBirth());
+            upPersonStatement.setString(1, person.getCpf());
+            upPersonStatement.setString(2, person.getName());
+            upPersonStatement.setString(3, String.valueOf(person.getGender()));
+            upPersonStatement.setDate(4, person.getBirth());
             upPersonStatement.setString(5, currentCPF);
 
+            //upPhoneStatement.setString(1, person.getCpf());
+            upPhoneStatement.setString(1, person.getPhoneNumber());
+            upPhoneStatement.setString(2, currentCPF);
+
+            //upEmailStatement.setString(1, person.getCpf());
+            upEmailStatement.setString(1, person.getEmail());
+            upEmailStatement.setString(2, currentCPF);
+
+            upPhoneStatement.executeUpdate();
+            upEmailStatement.executeUpdate();
             upPersonStatement.executeUpdate();
 
         } catch (SQLException ex) {
@@ -1034,8 +1043,30 @@ public final class DatabaseHelper {
         }
     }
 
-    public void updateUser(User u) {
-
-    }
+    /**
+     * Updates user and person in the database.
+     *
+     * @param currentUserID is the current user to be updated.
+     * @param user are the new values for currentUserID.
      */
+    public void updateUser(String currentUserID, User user) {
+        try {
+            try {
+                updatePerson(getUserByID(currentUserID).getCpf(), (Person) user);
+            } catch (KeyNotFoundException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            upUserStatement.setString(1, user.getUserID());
+            upUserStatement.setString(2, user.getCpf());
+            upUserStatement.setInt(3, user.getUserTypeID());
+            upUserStatement.setString(4, user.getPassword());
+            upUserStatement.setString(5, currentUserID);
+
+            upUserStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }
