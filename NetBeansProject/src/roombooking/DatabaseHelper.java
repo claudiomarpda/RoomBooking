@@ -27,8 +27,8 @@ public final class DatabaseHelper {
     private Connection mConnection;
     private static final String URL = "jdbc:mysql://localhost:3306/room_booking";
     private static final String USERNAME = "root";
-//    private static final String PASSWORD = "mysql";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "mysql";
+//    private static final String PASSWORD = "123";
     private static final String MY_DATE_FORMAT = "%Y-%m-%d %h:%i %p"; // Format for MySQL
 
     // ------------ Constant variables of the tables ------------
