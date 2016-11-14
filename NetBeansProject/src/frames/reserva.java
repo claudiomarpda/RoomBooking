@@ -42,8 +42,14 @@ public class reserva extends javax.swing.JFrame {
         jFormattedTextFieldData = new javax.swing.JFormattedTextField();
         jFormattedTextFieldHora = new javax.swing.JFormattedTextField();
         jSpinnerDemanda = new javax.swing.JSpinner();
+        jButtonEditar = new javax.swing.JButton();
+        jButtonSalvar = new javax.swing.JButton();
+        Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(932, 659));
+        setResizable(false);
+        setSize(new java.awt.Dimension(932, 659));
         getContentPane().setLayout(null);
 
         jLabelID.setText("ID");
@@ -64,49 +70,73 @@ public class reserva extends javax.swing.JFrame {
 
         jLabelData.setText("Data");
         getContentPane().add(jLabelData);
-        jLabelData.setBounds(70, 390, 26, 16);
+        jLabelData.setBounds(70, 400, 26, 16);
 
         jLabelHora.setText("Hora");
         getContentPane().add(jLabelHora);
-        jLabelHora.setBounds(180, 390, 27, 16);
+        jLabelHora.setBounds(180, 400, 27, 16);
 
         jLabelDemanda.setText("Demanda");
         jLabelDemanda.setToolTipText("Quantidade de pessoas a ocupar a sala.");
         getContentPane().add(jLabelDemanda);
-        jLabelDemanda.setBounds(70, 460, 54, 16);
+        jLabelDemanda.setBounds(70, 480, 54, 16);
 
+        jTextFieldID1.setEditable(false);
         jTextFieldID1.setPreferredSize(new java.awt.Dimension(270, 24));
         getContentPane().add(jTextFieldID1);
-        jTextFieldID1.setBounds(71, 96, 270, 24);
+        jTextFieldID1.setBounds(71, 96, 270, 30);
 
+        jTextFieldUsuario.setEditable(false);
         jTextFieldUsuario.setPreferredSize(new java.awt.Dimension(270, 24));
         getContentPane().add(jTextFieldUsuario);
-        jTextFieldUsuario.setBounds(71, 166, 270, 24);
+        jTextFieldUsuario.setBounds(71, 166, 270, 30);
 
+        jTextFieldSala.setEditable(false);
         jTextFieldSala.setPreferredSize(new java.awt.Dimension(270, 24));
         getContentPane().add(jTextFieldSala);
-        jTextFieldSala.setBounds(71, 236, 270, 24);
+        jTextFieldSala.setBounds(71, 236, 270, 30);
 
+        jTextPaneObjetivo.setEditable(false);
         jScrollPaneObejtivo.setViewportView(jTextPaneObjetivo);
 
         getContentPane().add(jScrollPaneObejtivo);
         jScrollPaneObejtivo.setBounds(71, 306, 270, 65);
 
+        jFormattedTextFieldData.setEditable(false);
         jFormattedTextFieldData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
         jFormattedTextFieldData.setText("DD/MM/AAAA");
         getContentPane().add(jFormattedTextFieldData);
-        jFormattedTextFieldData.setBounds(71, 417, 90, 20);
+        jFormattedTextFieldData.setBounds(70, 420, 90, 30);
 
+        jFormattedTextFieldHora.setEditable(false);
         jFormattedTextFieldHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT))));
         jFormattedTextFieldHora.setText("HH:mm");
         getContentPane().add(jFormattedTextFieldHora);
-        jFormattedTextFieldHora.setBounds(179, 417, 91, 20);
+        jFormattedTextFieldHora.setBounds(180, 420, 91, 30);
 
         jSpinnerDemanda.setModel(new javax.swing.SpinnerNumberModel());
+        jSpinnerDemanda.setEnabled(false);
+        jSpinnerDemanda.setOpaque(false);
         getContentPane().add(jSpinnerDemanda);
-        jSpinnerDemanda.setBounds(71, 483, 54, 26);
+        jSpinnerDemanda.setBounds(70, 500, 54, 26);
+
+        jButtonEditar.setText("Editar");
+        jButtonEditar.setOpaque(false);
+        jButtonEditar.setPreferredSize(new java.awt.Dimension(66, 32));
+        getContentPane().add(jButtonEditar);
+        jButtonEditar.setBounds(830, 540, 66, 32);
+
+        jButtonSalvar.setText("Salvar");
+        jButtonSalvar.setOpaque(false);
+        getContentPane().add(jButtonSalvar);
+        jButtonSalvar.setBounds(830, 590, 66, 32);
+
+        Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
+        getContentPane().add(Background);
+        Background.setBounds(0, 0, 932, 659);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -145,6 +175,9 @@ public class reserva extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Background;
+    private javax.swing.JButton jButtonEditar;
+    private javax.swing.JButton jButtonSalvar;
     private javax.swing.JFormattedTextField jFormattedTextFieldData;
     private javax.swing.JFormattedTextField jFormattedTextFieldHora;
     private javax.swing.JLabel jLabelData;
