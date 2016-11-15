@@ -6,7 +6,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -105,6 +104,11 @@ public final class DatabaseHelper {
     private PreparedStatement upUserStatement;
     private PreparedStatement upPhoneStatement;
     private PreparedStatement upEmailStatement;
+    private PreparedStatement upBookingStatement;
+    private PreparedStatement upRoomStatement;
+    private PreparedStatement upFloorStatement;
+    private PreparedStatement upRoomTypeStatement;
+    private PreparedStatement upUserTypeStatement;
 
     // Read queries
     private PreparedStatement readUserByCPFStatement;
@@ -114,6 +118,7 @@ public final class DatabaseHelper {
     private PreparedStatement readRoomsByTypeStatement;
     private PreparedStatement readAllBookingsStatement;
     private PreparedStatement readBookingsByUserIDStatement;
+    private PreparedStatement readUsersLikeStatement;
 
     private PreparedStatement checkUserExistence;
     private PreparedStatement checkBookingExistence;
@@ -238,11 +243,19 @@ public final class DatabaseHelper {
         addUserTypeStatement = mConnection.prepareStatement(
                 "INSERT INTO " + USER_TYPE
                 + "(" + USER_TYPE_ID + ", " + USER_TYPE_DESCRIPTION + ")"
-                + "VALUES (?, ?)");
+                + "VALUES (?, ?)"
+        );
 
         rmUserTypeStatement = mConnection.prepareStatement(
                 "DELETE FROM " + USER_TYPE
-                + " WHERE " + USER_TYPE_ID + " = ?");
+                + " WHERE " + USER_TYPE_ID + " = ?"
+        );
+
+        upUserTypeStatement = mConnection.prepareStatement(
+                "UPDATE " + USER_TYPE + " SET "
+                + USER_TYPE_DESCRIPTION + " = ? "
+                + "WHERE " + USER_TYPE_ID + " = ?"
+        );
     }
 
     private void setUserQueries() throws SQLException {
@@ -292,6 +305,12 @@ public final class DatabaseHelper {
                 + USER_PASSWORD + " = ? "
                 + "WHERE " + USER_ID + " = ?"
         );
+
+        readUsersLikeStatement = mConnection.prepareStatement(
+                //"SELECT * FROM " + USER + " WHERE " + PERSON + "." + NAME + " LIKE ?"
+                allUsersQuery
+                + " WHERE " + PERSON + "." + NAME + " LIKE ?"
+        );
     }
 
     private void setFloorQueries() throws SQLException {
@@ -303,6 +322,12 @@ public final class DatabaseHelper {
         rmFloorStatement = mConnection.prepareStatement(
                 "DELETE FROM " + FLOOR
                 + " WHERE " + FLOOR_ID + " = ?");
+
+        upFloorStatement = mConnection.prepareStatement(
+                "UPDATE " + FLOOR + " SET "
+                + FLOOR_DESCRIPTION + " = ? "
+                + "WHERE " + FLOOR_ID + " = ?"
+        );
     }
 
     private void setRoomTypeQueries() throws SQLException {
@@ -314,6 +339,12 @@ public final class DatabaseHelper {
         rmRoomTypeStatement = mConnection.prepareStatement(
                 "DELETE FROM " + ROOM_TYPE
                 + " WHERE " + ROOM_TYPE_ID + " = ?");
+
+        upRoomTypeStatement = mConnection.prepareStatement(
+                "UPDATE " + ROOM_TYPE + " SET "
+                + ROOM_TYPE_DESCRIPTION + " = ? "
+                + "WHERE " + ROOM_TYPE_ID + " = ?"
+        );
     }
 
     private void setRoomQueries() throws SQLException {
@@ -344,13 +375,23 @@ public final class DatabaseHelper {
                 + " WHERE " + ROOM + "." + ROOM_TYPE + " = ?"
         );
 
+        upRoomStatement = mConnection.prepareStatement(
+                "UPDATE " + ROOM + " SET "
+                + ROOM_ID + " = ?, "
+                + ROOM_TYPE + " = ?, "
+                + FLOOR + " = ?, "
+                + ROOM_CAPACITY + " = ?, "
+                + HAS_PROJECTOR + " = ?, "
+                + NUM_COMPUTERS + " = ? "
+                + "WHERE " + ROOM_ID + " = ?"
+        );
     }
 
     private void setBookingQueries() throws SQLException {
 
         /**
          * STR_TO_DATE converts the given string to SQL Date that will be
-         * retrieved later with getTimetamp
+         * retrieved later with getTimetamp.
          */
         addBookingStatement = mConnection.prepareStatement(
                 "INSERT INTO " + BOOKING
@@ -377,6 +418,15 @@ public final class DatabaseHelper {
         checkBookingExistence = mConnection.prepareStatement(
                 allBookingsQuery
                 + " WHERE " + ROOM + " = ? AND " + DATE_TIME + " = ?"
+        );
+
+        upBookingStatement = mConnection.prepareStatement(
+                "UPDATE " + BOOKING + " SET "
+                + GOAL + " = ?, "
+                + NUM_PEOPLE + " = ?, "
+                //+ DATE_TIME + " = ? "
+                + DATE_TIME + " = STR_TO_DATE(?, '" + MY_DATE_FORMAT + "') "
+                + "WHERE " + BOOKING_ID + " = ?"
         );
     }
 
@@ -565,7 +615,7 @@ public final class DatabaseHelper {
     }
 
     /**
-     * Checks if a booking exists
+     * Checks if a booking exists.
      *
      * @param roomID
      * @param dateTime is compared as String with Date in MySQL query (and it
@@ -684,6 +734,9 @@ public final class DatabaseHelper {
     }
 
     public void removeBooking(int bookingID) {
+        // TODO
+        // 1. Allow to remove only before the reservation time.
+
         try {
             rmBookingStatement.setInt(1, bookingID);
             rmBookingStatement.executeUpdate();
@@ -1069,4 +1122,128 @@ public final class DatabaseHelper {
         }
     }
 
+    /**
+     * Updates booking in the database. Booking ID and Room ID cannot be
+     * updated.
+     *
+     * @param bookingID the booking to be updated
+     * @param booking new data to update the booking
+     * @param time as string: YYYY/MM/DD HH:MM AA. We use STR_TO_DATE(time) in
+     * MySQL query.
+     */
+    public void updateBooking(int bookingID, Booking booking, String time) {
+        try {
+
+            // TODO
+            // 1 - Allow update only before the reservation time.
+            upBookingStatement.setString(1, booking.getGoal());
+            upBookingStatement.setInt(2, booking.getNumberOfPeople());
+            upBookingStatement.setString(3, time);
+            upBookingStatement.setInt(4, bookingID);
+
+            upBookingStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Updates Room in the database.
+     *
+     * @param roomID is the room to be updated
+     * @param room the new data
+     */
+    public void updateRoom(String roomID, Room room) {
+        try {
+            upRoomStatement.setString(1, room.getRoomID());
+            upRoomStatement.setString(2, room.getRoomTypeID());
+            upRoomStatement.setInt(3, room.getFloorID());
+            upRoomStatement.setInt(4, room.getCapacity());
+            upRoomStatement.setInt(5, (room.HasProjector() ? 1 : 0));
+            upRoomStatement.setInt(6, room.getNumberOfComputers());
+            upRoomStatement.setString(7, roomID);
+
+            upRoomStatement.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Updates Floor in the database.
+     *
+     * @param floorID the floor to be updated.
+     * @param floorDescription the new description.
+     */
+    public void updateFloor(int floorID, String floorDescription) {
+        try {
+            upFloorStatement.setString(1, floorDescription);
+            upFloorStatement.setInt(2, floorID);
+
+            upFloorStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Updates UserType in the database.
+     *
+     * @param userTypeID the user type to be updated.
+     * @param userTypeDescription the new description.
+     */
+    public void updateUserType(int userTypeID, String userTypeDescription) {
+        try {
+            upUserTypeStatement.setString(1, userTypeDescription);
+            upUserTypeStatement.setInt(2, userTypeID);
+
+            upUserTypeStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Updates RoomType in the database.
+     *
+     * @param roomTypeID the room type to be updated.
+     * @param roomTypeDescription the new description.
+     */
+    public void updateRoomType(String roomTypeID, String roomTypeDescription) {
+        try {
+            upRoomTypeStatement.setString(1, roomTypeDescription);
+            upRoomTypeStatement.setString(2, roomTypeID);
+
+            upRoomTypeStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Finds all users in the database whose name contains a given substring.
+     *
+     * @param nameLike is a possible substring of a name.
+     * @return list of users whose name has nameLike as substring.
+     */
+    public ArrayList<User> getUsersLike(String nameLike) {
+        ArrayList<User> list = null;
+        ResultSet mResultSet = null;
+        try {
+            readUsersLikeStatement.setString(1, "%" + nameLike + "%"); // % for sintax of MySQL query 
+
+            mResultSet = readUsersLikeStatement.executeQuery();
+            list = getUsers(mResultSet);
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                mResultSet.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return list;
+    }
 }

@@ -264,3 +264,19 @@ ADD CONSTRAINT `room_type_fk`
   ON DELETE SET NULL
   ON UPDATE CASCADE;
 
+ALTER TABLE `room_booking`.`user` 
+ADD CONSTRAINT `user_type_fk`
+  FOREIGN KEY (`user_type`)
+  REFERENCES `room_booking`.`user_type` (`id_user_type`)
+  ON DELETE NO ACTION
+  ON UPDATE CASCADE;
+
+
+    private int floorID;
+    private String floor;
+    private String roomTypeID;
+    private String roomTypeDescription;
+    private String roomID;
+    private int capacity;
+    private boolean hasProjector;
+    private int numberOfComputers;
