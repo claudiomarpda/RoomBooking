@@ -284,7 +284,9 @@ public class usuario extends javax.swing.JFrame {
                         jTextFieldNumber.getText(),
                         jTextFieldName.getText(),
                         gender.charAt(0),
-                        formatDateBackStr(jFormattedTextFieldData.getText()));
+                        formatDateBackStr(jFormattedTextFieldData.getText()),
+                        "senha", // <---- fix this
+                        1); // flag for active user
                 
                 usr = dbh.getUserByCPF(jTextFieldCpf.getText());
             } catch (KeyExistsException ex) {
