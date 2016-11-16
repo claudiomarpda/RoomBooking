@@ -6,7 +6,9 @@ import java.sql.Date;
  * User class represents database table User.
  */
 public class User extends Person {
-
+    
+    public static final int ADM = 3; // user type id
+    
     private String userID;
     private int userTypeID;
     private String userTypeDescription;

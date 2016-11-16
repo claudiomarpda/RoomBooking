@@ -5,7 +5,12 @@
  */
 package frames;
 
-import javax.swing.DefaultListModel;
+import java.util.ArrayList;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import roombooking.DatabaseHelper;
+import roombooking.Room;
+import roombooking.User;
 
 /**
  *
@@ -13,11 +18,52 @@ import javax.swing.DefaultListModel;
  */
 public class salas extends javax.swing.JFrame {
 
+    private DatabaseHelper database;
+    private User user;
+
     /**
      * Creates new form usuarios
      */
-    public salas() {
+    public salas(DatabaseHelper database, User user) {
         initComponents();
+        this.database = database;
+        this.user = user;
+
+        ArrayList<Room> rooms = database.getAllRooms();
+
+        DefaultTableModel dtm0 = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel dtm = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        jTable1.setModel(dtm);
+
+        dtm.addColumn("ID");
+        dtm.addColumn("TIPO");
+        dtm.addColumn("ANDAR");
+        dtm.addColumn("CAPACIDADE");
+        dtm.addColumn("PROJETOR");
+        dtm.addColumn("COMPUTADORES");
+
+        rooms.stream().forEach((room) -> {
+            System.out.println(room.toString());
+            dtm.addRow(new Object[]{
+                room.getRoomID(),
+                room.getRoomTypeDescription(),
+                room.getFloor(),
+                room.getCapacity(),
+                room.HasProjector() ? "SIM" : "NÃO",
+                room.getNumberOfComputers()
+            });
+        });
+
+        jButtonCancelar.setVisible(false);
+        if (user.getUserTypeID() != User.ADM) {
+            jButtonEditar.setVisible(false);
+        }
     }
 
     /**
@@ -29,12 +75,12 @@ public class salas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButtonAdicionar = new javax.swing.JButton();
-        jButtonVizualizar = new javax.swing.JButton();
+        jButtonEditar = new javax.swing.JButton();
+        jButtonCancelar = new javax.swing.JButton();
         jButtonInicio = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
         jButtonFiltrar = new javax.swing.JButton();
+        jScrollPaneTable = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -43,37 +89,35 @@ public class salas extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(932, 659));
         getContentPane().setLayout(null);
 
-        jButtonAdicionar.setText("Adicionar");
-        jButtonAdicionar.setOpaque(false);
-        jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonEditar.setText("Editar");
+        jButtonEditar.setOpaque(false);
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAdicionarActionPerformed(evt);
+                jButtonEditarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonAdicionar);
-        jButtonAdicionar.setBounds(800, 520, 80, 23);
+        getContentPane().add(jButtonEditar);
+        jButtonEditar.setBounds(800, 520, 80, 32);
 
-        jButtonVizualizar.setText("Vizualizar");
-        jButtonVizualizar.setOpaque(false);
-        jButtonVizualizar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.setOpaque(false);
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVizualizarActionPerformed(evt);
+                jButtonCancelarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButtonVizualizar);
-        jButtonVizualizar.setBounds(800, 570, 80, 23);
+        getContentPane().add(jButtonCancelar);
+        jButtonCancelar.setBounds(800, 570, 80, 32);
 
         jButtonInicio.setText("Inicio");
         jButtonInicio.setOpaque(false);
+        jButtonInicio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonInicioMouseClicked(evt);
+            }
+        });
         getContentPane().add(jButtonInicio);
-        jButtonInicio.setBounds(70, 80, 57, 23);
-
-        jList1.setBackground(new java.awt.Color(6, 89, 119));
-        jList1.setModel(new DefaultListModel());
-        jScrollPane1.setViewportView(jList1);
-
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(70, 150, 690, 450);
+        jButtonInicio.setBounds(70, 80, 60, 32);
 
         jButtonFiltrar.setText("Filtrar");
         jButtonFiltrar.setOpaque(false);
@@ -85,6 +129,13 @@ public class salas extends javax.swing.JFrame {
         });
         getContentPane().add(jButtonFiltrar);
         jButtonFiltrar.setBounds(800, 150, 77, 23);
+
+        jTable1.setModel(new DefaultTableModel());
+        jTable1.setPreferredSize(new java.awt.Dimension(480, 320));
+        jScrollPaneTable.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPaneTable);
+        jScrollPaneTable.setBounds(70, 150, 700, 403);
 
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
         Background.setMaximumSize(new java.awt.Dimension(933, 660));
@@ -99,13 +150,26 @@ public class salas extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonFiltrarActionPerformed
 
-    private void jButtonVizualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVizualizarActionPerformed
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonVizualizarActionPerformed
+        jButtonEditar.setText("Editar");
+        jButtonCancelar.setVisible(false);
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
 
-    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonAdicionarActionPerformed
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        if (jButtonEditar.getText() == "Editar") {
+            jButtonEditar.setText("Salvar");
+            jButtonCancelar.setVisible(true);
+        } else {
+            jButtonEditar.setText("Editar");
+            jButtonCancelar.setVisible(false);
+        }
+    }//GEN-LAST:event_jButtonEditarActionPerformed
+
+    private void jButtonInicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonInicioMouseClicked
+        new inicio(database, user).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonInicioMouseClicked
 
     /**
      * @param args the command line arguments
@@ -144,11 +208,11 @@ public class salas extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Background;
-    private javax.swing.JButton jButtonAdicionar;
+    private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonEditar;
     private javax.swing.JButton jButtonFiltrar;
     private javax.swing.JButton jButtonInicio;
-    private javax.swing.JButton jButtonVizualizar;
-    private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPaneTable;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

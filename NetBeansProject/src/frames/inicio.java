@@ -50,6 +50,9 @@ public class inicio extends javax.swing.JFrame {
         jLabel_salas.setText(" Salas");
         jLabel_salas.setOpaque(true);
         jLabel_salas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel_salasMouseClicked(evt);
+            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jLabel_salasMouseReleased(evt);
             }
@@ -114,6 +117,11 @@ public class inicio extends javax.swing.JFrame {
         new reserva().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel_reservaMouseReleased
+
+    private void jLabel_salasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_salasMouseClicked
+        new salas(helper, user).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel_salasMouseClicked
 
     /**
      * @param args the command line arguments

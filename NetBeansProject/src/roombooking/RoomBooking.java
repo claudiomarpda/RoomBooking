@@ -1,8 +1,8 @@
 package roombooking;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,7 +36,7 @@ public class RoomBooking {
         //mDatabaseHelper.removeBooking(1);
         //mDatabaseHelper.removePhone("22222222222");
         //mDatabaseHelper.removeFloor(0);
-        //mDatabaseHelper.addUserType(3, "Funcionário Admin");
+        //mDatabaseHelper.addUserType(3, "Administrador");
         //mDatabaseHelper.removeUserType(3);
         //mDatabaseHelper.removeRoomType("AUL");
         //mDatabaseHelper.addRoom("LAB-102", "LAB", 1, 60, 1, 0, 1);
@@ -81,12 +81,12 @@ public class RoomBooking {
         if (u2 != null) {
             System.out.println(u2.toString());
         }
-         */
- /*
-        List<Room> roomList = mDatabaseHelper.getAllRooms();
+        ArrayList<Room> roomList = mDatabaseHelper.getAllRooms();
         for (Room r : roomList) {
             System.out.println(r.toString());
         }
+         */
+ /*
         System.out.println();
         List<Room> roomList2 = mDatabaseHelper.getAllRoomsByType("LAB");
         for (Room r : roomList2) {

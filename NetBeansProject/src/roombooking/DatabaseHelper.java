@@ -372,8 +372,10 @@ public final class DatabaseHelper {
         );
 
         // The result columns type represents all attributes of Room class
-        final String allRoomsQuery = "SELECT *"
-                + " FROM " + ROOM
+        final String allRoomsQuery
+                = "SELECT id_floor, floor.description, id_room_type, room_type.description, "
+                + "id_room, capacity, has_projector, num_computers, active "
+                + "FROM " + ROOM
                 + " LEFT JOIN " + FLOOR + " ON " + FLOOR + "." + FLOOR_ID + " = " + ROOM + "." + FLOOR
                 + " LEFT JOIN " + ROOM_TYPE + " ON " + ROOM_TYPE + "." + ROOM_TYPE_ID + " = " + ROOM + "." + ROOM_TYPE;
 
@@ -937,17 +939,17 @@ public final class DatabaseHelper {
 
         while (resultSet.next()) { // moves to the next valid row
 
-            boolean hasProjector = resultSet.getInt(5) == 1 ? true : false;
             Room room = new Room(
-                    resultSet.getInt(7), // floorID 
-                    resultSet.getString(8), // floor
-                    resultSet.getString(9), // roomTypeID
-                    resultSet.getString(10), // roomTypeDescription
-                    resultSet.getString(1), // roomID
-                    resultSet.getInt(4), // capacity
-                    hasProjector, // hasProjector
-                    resultSet.getInt(6), // numberOfComputers
-                    resultSet.getInt(7) // active
+                    resultSet.getInt(1), // floorID 
+                    resultSet.getString(2), // floor
+                    resultSet.getString(3), // roomTypeID
+                    resultSet.getString(4), // roomTypeDescription
+                    resultSet.getString(5), // roomID
+                    resultSet.getInt(6), // capacity
+                    resultSet.getBoolean(7), // hasProjector
+                    resultSet.getInt(8), // numberOfComputers
+                    resultSet.getInt(9) // active
+
             );
             list.add(room);
         }
@@ -1269,10 +1271,11 @@ public final class DatabaseHelper {
         }
         return list;
     }
-    
+
     /**
-     * Reverses the current 'active' status of the user and saves it to the database.
-     * 
+     * Reverses the current 'active' status of the user and saves it to the
+     * database.
+     *
      * @param user to be activated or deactivated.
      */
     public void reverseUserActivation(User user) {
@@ -1292,8 +1295,9 @@ public final class DatabaseHelper {
     }
 
     /**
-     * Reverses the current 'active' status of the room and saves it to the database.
-     * 
+     * Reverses the current 'active' status of the room and saves it to the
+     * database.
+     *
      * @param room to be activated or deactivated.
      */
     public void reverseRoomActivation(Room room) {
