@@ -11,18 +11,20 @@ public class User extends Person {
     private int userTypeID;
     private String userTypeDescription;
     private String password;
+    private int active;
 
     public User() {
     }
 
     // Constructor with only one phone number
     public User(String userID, int userTypeID, String userTypeDescription, String cpf, String name,
-            String gender, Date birth, String phoneNumber, String email, String password) {
+            String gender, Date birth, String phoneNumber, String email, String password, int active) {
         super(cpf, name, gender, birth, phoneNumber, email);
         this.userID = userID;
         this.userTypeID = userTypeID;
         this.userTypeDescription = userTypeDescription;
         this.password = password;
+        this.active = active;
     }
 
     public void setUserType(byte userType) {
@@ -55,6 +57,14 @@ public class User extends Person {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 
     @Override

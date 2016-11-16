@@ -271,12 +271,9 @@ ADD CONSTRAINT `user_type_fk`
   ON DELETE NO ACTION
   ON UPDATE CASCADE;
 
+ALTER TABLE `room_booking`.`user` 
+ADD COLUMN `active` TINYINT(1) NULL AFTER `password`;
 
-    private int floorID;
-    private String floor;
-    private String roomTypeID;
-    private String roomTypeDescription;
-    private String roomID;
-    private int capacity;
-    private boolean hasProjector;
-    private int numberOfComputers;
+ALTER TABLE `room_booking`.`room` 
+ADD COLUMN `active` TINYINT(1) NULL AFTER `num_computers`;
+

@@ -39,7 +39,7 @@ public class RoomBooking {
         //mDatabaseHelper.addUserType(3, "Funcionário Admin");
         //mDatabaseHelper.removeUserType(3);
         //mDatabaseHelper.removeRoomType("AUL");
-        //mDatabaseHelper.addRoom("AUD-001", "AUD", 1, 60, 1, 0);
+        //mDatabaseHelper.addRoom("LAB-102", "LAB", 1, 60, 1, 0, 1);
         // mDatabaseHelper.addRoomType("AUD", "Auditório");
         //mDatabaseHelper.removeRoom("AUD-001");
         //mDatabaseHelper.printSelectEverythingFromPerson();
@@ -109,7 +109,7 @@ public class RoomBooking {
         System.out.println(mDatabaseHelper.bookingExists("LAB-101", "2016-11-01 14:00:00"));
         
          */
-        //mDatabaseHelper.addUser("20169", "99999999999", 2, "admin@gmail.com", "083 9 9999-9999", "Administrador", 'M', "2000-01-01", "123");
+        //mDatabaseHelper.addUser("20162", "112", 2, "rod@gmail.com", "083 9 9999-9999", "Rodrigo", 'M', "2000-01-01", "123", 1);
         /* 
          (String userID, String cpf, int userTypeID, String emailAddress,
              String phoneNumber, String name, char gender, String birth, String password)
@@ -119,15 +119,19 @@ public class RoomBooking {
          */
         /*
         User u = mDatabaseHelper.getUserByCPF("112");
-        u.setCpf("119");
-        mDatabaseHelper.updateUser(u.getUserID(), u);
+        //u.setCpf("119");
+        //mDatabaseHelper.updateUser(u.getUserID(), u);
+        mDatabaseHelper.reverseUserActivation(u);
+        System.out.println(u.getActive());
          */
  /*
         Booking b = mDatabaseHelper.getBookingsByUserID("20163").get(0);
         mDatabaseHelper.updateBooking(1, b, "2017-12-20 07:00 AM");
+        Room r = mDatabaseHelper.getAllRoomsByType("AUD").get(0);
+        mDatabaseHelper.reverseRoomActivation(r);
+        System.out.println(r.getActive());
          */
  /*
-        Room r = mDatabaseHelper.getAllRoomsByType("AUD").get(0);
         r.setCapacity(99);
         mDatabaseHelper.updateRoom("AUD-001", r);
          */
@@ -137,8 +141,6 @@ public class RoomBooking {
         mDatabaseHelper.updateUserType(2, "Aluno");
         System.out.println(mDatabaseHelper.getUsersLike("an").toString());
          */
-         
- 
         mDatabaseHelper.closeConnection();
     }
 

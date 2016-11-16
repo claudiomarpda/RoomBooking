@@ -27,6 +27,8 @@ public final class DatabaseHelper {
     private static final String MY_DATE_FORMAT = "%Y-%m-%d %h:%i %p"; // Format for MySQL
 
     // ------------ Constant variables of the tables ------------
+    private static final String ACTIVE = "active";
+
     // Person table 
     private static final String PERSON = "person";
     private static final String CPF = "cpf"; // Cadastro de Pessoa Física
@@ -122,6 +124,9 @@ public final class DatabaseHelper {
 
     private PreparedStatement checkUserExistence;
     private PreparedStatement checkBookingExistence;
+
+    private PreparedStatement activationUserStatement;
+    private PreparedStatement activationRoomStatement;
 
     /**
      * Constructor connects to the database and initializes PreparedStatement
@@ -261,8 +266,8 @@ public final class DatabaseHelper {
     private void setUserQueries() throws SQLException {
         addUserStatement = mConnection.prepareStatement(
                 "INSERT INTO " + USER
-                + "(" + USER_ID + ", " + CPF + "," + USER_TYPE + "," + USER_PASSWORD + ")"
-                + "VALUES (?, ?, ?, ?)");
+                + "(" + USER_ID + ", " + CPF + "," + USER_TYPE + "," + USER_PASSWORD + ", " + ACTIVE + ")"
+                + "VALUES (?, ?, ?, ?, ?)");
 
         rmUserStatement = mConnection.prepareStatement(
                 "DELETE FROM " + USER
@@ -276,7 +281,8 @@ public final class DatabaseHelper {
         final String allUsersQuery = "SELECT "
                 + USER_ID + ", " + USER_TYPE_ID + ", " + USER_TYPE_DESCRIPTION + ", "
                 + PERSON + "." + CPF + "," + NAME + ", " + GENDER + ", " + BIRTH + " ,"
-                + PHONE + "." + PHONE_NUMBER + ", " + EMAIL_ADDRESS + ", " + USER + "." + USER_PASSWORD
+                + PHONE + "." + PHONE_NUMBER + ", " + EMAIL_ADDRESS + ", "
+                + USER + "." + USER_PASSWORD + ", " + ACTIVE
                 + " FROM " + PERSON
                 + " LEFT JOIN " + USER + " ON " + PERSON + "." + CPF + " = " + USER + "." + CPF
                 + " LEFT JOIN " + USER_TYPE + " ON " + USER + "." + USER_TYPE + " = " + USER_TYPE + "." + USER_TYPE_ID
@@ -307,9 +313,14 @@ public final class DatabaseHelper {
         );
 
         readUsersLikeStatement = mConnection.prepareStatement(
-                //"SELECT * FROM " + USER + " WHERE " + PERSON + "." + NAME + " LIKE ?"
                 allUsersQuery
                 + " WHERE " + PERSON + "." + NAME + " LIKE ?"
+        );
+
+        activationUserStatement = mConnection.prepareStatement(
+                "UPDATE " + USER + " SET "
+                + ACTIVE + " = ? "
+                + "WHERE " + USER_ID + " = ?"
         );
     }
 
@@ -351,8 +362,8 @@ public final class DatabaseHelper {
         addRoomStatement = mConnection.prepareStatement(
                 "INSERT INTO " + ROOM
                 + "(" + ROOM_ID + ", " + ROOM_TYPE + ", " + FLOOR + ", "
-                + ROOM_CAPACITY + ", " + HAS_PROJECTOR + ", " + NUM_COMPUTERS + ")"
-                + "VALUES (?, ?, ?, ?, ?, ?)"
+                + ROOM_CAPACITY + ", " + HAS_PROJECTOR + ", " + NUM_COMPUTERS + ", " + ACTIVE + ")"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)"
         );
 
         rmRoomStatement = mConnection.prepareStatement(
@@ -383,6 +394,12 @@ public final class DatabaseHelper {
                 + ROOM_CAPACITY + " = ?, "
                 + HAS_PROJECTOR + " = ?, "
                 + NUM_COMPUTERS + " = ? "
+                + "WHERE " + ROOM_ID + " = ?"
+        );
+
+        activationRoomStatement = mConnection.prepareStatement(
+                "UPDATE " + ROOM + " SET "
+                + ACTIVE + " = ? "
                 + "WHERE " + ROOM_ID + " = ?"
         );
     }
@@ -496,12 +513,13 @@ public final class DatabaseHelper {
     /**
      * Creates an new user in User table.
      */
-    private void addUser(String userID, String cpf, int userTypeID, String password) {
+    private void addUser(String userID, String cpf, int userTypeID, String password, int active) {
         try {
             addUserStatement.setString(1, userID);
             addUserStatement.setString(2, cpf);
             addUserStatement.setInt(3, userTypeID);
             addUserStatement.setString(4, password);
+            addUserStatement.setInt(5, active);
 
             //addUserStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -515,7 +533,8 @@ public final class DatabaseHelper {
      * tables.
      */
     public void addUser(String userID, String cpf, int userTypeID, String emailAddress,
-            String phoneNumber, String name, char gender, String birth, String password) throws KeyExistsException {
+            String phoneNumber, String name, char gender, String birth, String password,
+            int active) throws KeyExistsException {
 
         if (userExists(userID, cpf)) {
             throw new KeyExistsException("User already exists");
@@ -524,7 +543,7 @@ public final class DatabaseHelper {
         addPerson(cpf, name, gender, birth);
         addEmail(cpf, emailAddress);
         addPhone(cpf, phoneNumber);
-        addUser(userID, cpf, userTypeID, password);
+        addUser(userID, cpf, userTypeID, password, active);
 
         try {
             addPersonStatement.executeUpdate();
@@ -570,7 +589,7 @@ public final class DatabaseHelper {
      * Creates a new room in Room table.
      */
     public void addRoom(String roomID, String roomType, int floorID, int capacity,
-            int hasProjector, int numberOfComputers) {
+            int hasProjector, int numberOfComputers, int active) {
         try {
             addRoomStatement.setString(1, roomID);
             addRoomStatement.setString(2, roomType);
@@ -578,6 +597,7 @@ public final class DatabaseHelper {
             addRoomStatement.setInt(4, capacity);
             addRoomStatement.setInt(5, hasProjector);
             addRoomStatement.setInt(6, numberOfComputers);
+            addRoomStatement.setInt(7, active);
 
             addRoomStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -735,7 +755,7 @@ public final class DatabaseHelper {
 
     public void removeBooking(int bookingID) {
         // TODO
-        // 1. Allow to remove only before the reservation time.
+        // 1. Allow to remove only before the reservation time for common user.
 
         try {
             rmBookingStatement.setInt(1, bookingID);
@@ -788,16 +808,17 @@ public final class DatabaseHelper {
 
         while (resultSet.next()) { // moves to the next valid row
             User user = new User(
-                    resultSet.getString(1),
-                    resultSet.getInt(2),
-                    resultSet.getString(3),
-                    resultSet.getString(4),
-                    resultSet.getString(5),
-                    resultSet.getString(6),
-                    resultSet.getDate(7),
-                    resultSet.getString(8),
-                    resultSet.getString(9),
-                    resultSet.getString(10)
+                    resultSet.getString(1), // userID
+                    resultSet.getInt(2), // userTypeID
+                    resultSet.getString(3), // userTypeDescription
+                    resultSet.getString(4), // CPF
+                    resultSet.getString(5), // name
+                    resultSet.getString(6), // gender
+                    resultSet.getDate(7), // birth
+                    resultSet.getString(8), // phoneNumber
+                    resultSet.getString(9), // email
+                    resultSet.getString(10), // password
+                    resultSet.getInt(11) // active
             );
             list.add(user);
         }
@@ -835,7 +856,8 @@ public final class DatabaseHelper {
                     mResultSet.getDate(7),
                     mResultSet.getString(8),
                     mResultSet.getString(9),
-                    mResultSet.getString(10)
+                    mResultSet.getString(10),
+                    mResultSet.getInt(11)
             );
 
         } catch (SQLException ex) {
@@ -917,14 +939,15 @@ public final class DatabaseHelper {
 
             boolean hasProjector = resultSet.getInt(5) == 1 ? true : false;
             Room room = new Room(
-                    resultSet.getInt(7),
-                    resultSet.getString(8),
-                    resultSet.getString(9),
-                    resultSet.getString(10),
-                    resultSet.getString(1),
-                    resultSet.getInt(4),
-                    hasProjector,
-                    resultSet.getInt(6)
+                    resultSet.getInt(7), // floorID 
+                    resultSet.getString(8), // floor
+                    resultSet.getString(9), // roomTypeID
+                    resultSet.getString(10), // roomTypeDescription
+                    resultSet.getString(1), // roomID
+                    resultSet.getInt(4), // capacity
+                    hasProjector, // hasProjector
+                    resultSet.getInt(6), // numberOfComputers
+                    resultSet.getInt(7) // active
             );
             list.add(room);
         }
@@ -1135,7 +1158,7 @@ public final class DatabaseHelper {
         try {
 
             // TODO
-            // 1 - Allow update only before the reservation time.
+            // 1 - Allow update only before the reservation time for all users.
             upBookingStatement.setString(1, booking.getGoal());
             upBookingStatement.setInt(2, booking.getNumberOfPeople());
             upBookingStatement.setString(3, time);
@@ -1245,5 +1268,47 @@ public final class DatabaseHelper {
             }
         }
         return list;
+    }
+    
+    /**
+     * Reverses the current 'active' status of the user and saves it to the database.
+     * 
+     * @param user to be activated or deactivated.
+     */
+    public void reverseUserActivation(User user) {
+        try {
+            if (user.getActive() == 0) {
+                user.setActive(1);
+                activationUserStatement.setInt(1, 1); // set active
+            } else {
+                user.setActive(0);
+                activationUserStatement.setInt(1, 0); // set inactive
+            }
+            activationUserStatement.setString(2, user.getUserID());
+            activationUserStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Reverses the current 'active' status of the room and saves it to the database.
+     * 
+     * @param room to be activated or deactivated.
+     */
+    public void reverseRoomActivation(Room room) {
+        try {
+            if (room.getActive() == 0) {
+                room.setActive(1);
+                activationRoomStatement.setInt(1, 1); // set active
+            } else {
+                room.setActive(0);
+                activationRoomStatement.setInt(1, 0); // set inactive
+            }
+            activationRoomStatement.setString(2, room.getRoomID());
+            activationRoomStatement.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -13,8 +13,10 @@ public class Room {
     private int capacity;
     private boolean hasProjector;
     private int numberOfComputers;
+    private int active;
 
-    public Room(int floorID, String floor, String roomTypeID, String roomTypeDescription, String roomID, int capacity, boolean hasProjector, int numberOfComputers) {
+    public Room(int floorID, String floor, String roomTypeID, String roomTypeDescription, String roomID,
+            int capacity, boolean hasProjector, int numberOfComputers, int active) {
         this.floorID = floorID;
         this.floor = floor;
         this.roomTypeID = roomTypeID;
@@ -23,6 +25,7 @@ public class Room {
         this.capacity = capacity;
         this.hasProjector = hasProjector;
         this.numberOfComputers = numberOfComputers;
+        this.active = active;
     }
 
     public int getFloorID() {
@@ -87,6 +90,14 @@ public class Room {
 
     public void setNumberOfComputers(int numberOfComputers) {
         this.numberOfComputers = numberOfComputers;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 
     @Override
