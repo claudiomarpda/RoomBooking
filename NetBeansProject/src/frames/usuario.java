@@ -5,6 +5,12 @@
  */
 package frames;
 
+import java.sql.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+//import java.util.Date;
+import roombooking.*;
+
 /**
  *
  * @author Jonathan
@@ -16,6 +22,92 @@ public class usuario extends javax.swing.JFrame {
      */
     public usuario() {
         initComponents();
+        edit();
+        dbh = new DatabaseHelper();
+    }
+    
+    public usuario(User usr) {
+        initComponents();
+        isEditable = false;
+        this.usr = usr;
+        dbh = new DatabaseHelper();
+        
+        jTextFieldId_user.setText(usr.getUserID());
+        jTextFieldCpf.setText(usr.getCpf());
+        jTextFieldName.setText(usr.getName());
+        jTextFieldEmail.setText(usr.getEmail());
+        jTextFieldNumber.setText(usr.getPhoneNumber());
+        jTextFieldUser_type.setText(usr.getUserTypeDescription());
+        
+        Date birth = usr.getBirth();
+        jFormattedTextFieldData.setText(formatDate(birth));
+
+        
+        if(usr.getGender().charAt(0) == 'M'){
+            jRadioButtonM.setSelected(true);
+            jRadioButtonF.setSelected(false);
+        }else if(usr.getGender().charAt(0) == 'F'){
+            jRadioButtonF.setSelected(true);
+            jRadioButtonM.setSelected(false);
+        }
+    }
+    
+    private void edit(){
+        isEditable = true;
+        
+        jTextFieldId_user.setEditable(true);
+        jTextFieldCpf.setEditable(true);
+        jTextFieldName.setEditable(true);
+        jTextFieldEmail.setEditable(true);
+        jTextFieldNumber.setEditable(true);
+        jTextFieldUser_type.setEditable(true);
+        jFormattedTextFieldData.setEditable(true);
+        jRadioButtonM.setEnabled(true);
+        jRadioButtonF.setEnabled(true);
+        
+        jButtonEditar.setText("Salvar");
+    }
+    
+    private String formatDate(Date d){
+        String date = d.toString();
+        
+        String year;
+        String month;
+        String day;
+        
+        year = ""+date.charAt(0)+date.charAt(1)+date.charAt(2)+date.charAt(3);
+        month = ""+date.charAt(5)+date.charAt(6);
+        day = ""+date.charAt(8)+date.charAt(9);
+        
+        return day+"/"+month+"/"+year;
+    }
+    
+    private Date formatDateBack(String date){
+        String year;
+        String month;
+        String day;
+        
+        year = ""+date.charAt(6)+date.charAt(7)+date.charAt(8)+date.charAt(9);
+        month = ""+date.charAt(3)+date.charAt(4);
+        day = ""+date.charAt(0)+date.charAt(1);
+        
+        Date d;
+        d = new Date(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
+        
+        return d;
+    }
+    
+    private String formatDateBackStr(String date){
+        String year;
+        String month;
+        String day;
+        
+        year = ""+date.charAt(6)+date.charAt(7)+date.charAt(8)+date.charAt(9);
+        month = ""+date.charAt(3)+date.charAt(4);
+        day = ""+date.charAt(0)+date.charAt(1);
+        
+        
+        return year+"-"+month+"-"+day;
     }
 
     /**
@@ -46,7 +138,7 @@ public class usuario extends javax.swing.JFrame {
         jTextFieldNumber = new javax.swing.JTextField();
         jTextFieldEmail = new javax.swing.JTextField();
         jButtonEditar = new javax.swing.JButton();
-        jButtonEditar1 = new javax.swing.JButton();
+        jLabelWarning = new javax.swing.JLabel();
         Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -59,42 +151,42 @@ public class usuario extends javax.swing.JFrame {
         jLabelID.setForeground(new java.awt.Color(240, 240, 240));
         jLabelID.setText("ID");
         getContentPane().add(jLabelID);
-        jLabelID.setBounds(70, 60, 34, 14);
+        jLabelID.setBounds(70, 60, 34, 16);
 
         jLabelCpf.setForeground(new java.awt.Color(240, 240, 240));
         jLabelCpf.setText("CPF");
         getContentPane().add(jLabelCpf);
-        jLabelCpf.setBounds(70, 130, 34, 14);
+        jLabelCpf.setBounds(70, 130, 34, 16);
 
         jLabelEmail.setForeground(new java.awt.Color(240, 240, 240));
         jLabelEmail.setText("Email");
         getContentPane().add(jLabelEmail);
-        jLabelEmail.setBounds(70, 560, 34, 14);
+        jLabelEmail.setBounds(70, 560, 34, 16);
 
         jLabelUser_type.setForeground(new java.awt.Color(240, 240, 240));
         jLabelUser_type.setText("Tipo de Usuário");
         getContentPane().add(jLabelUser_type);
-        jLabelUser_type.setBounds(70, 200, 80, 14);
+        jLabelUser_type.setBounds(70, 200, 80, 16);
 
         jLabelName.setForeground(new java.awt.Color(240, 240, 240));
         jLabelName.setText("Nome");
         getContentPane().add(jLabelName);
-        jLabelName.setBounds(70, 270, 34, 14);
+        jLabelName.setBounds(70, 270, 34, 16);
 
         jLabel1.setForeground(new java.awt.Color(240, 240, 240));
         jLabel1.setText("Genero");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(70, 340, 60, 14);
+        jLabel1.setBounds(70, 340, 60, 16);
 
         jLabelData.setForeground(new java.awt.Color(240, 240, 240));
         jLabelData.setText("Data de Nascimento");
         getContentPane().add(jLabelData);
-        jLabelData.setBounds(70, 410, 130, 14);
+        jLabelData.setBounds(70, 410, 130, 16);
 
         jLabelNumber.setForeground(new java.awt.Color(240, 240, 240));
         jLabelNumber.setText("Telefone");
         getContentPane().add(jLabelNumber);
-        jLabelNumber.setBounds(70, 490, 80, 14);
+        jLabelNumber.setBounds(70, 490, 80, 16);
 
         buttonGroup1.add(jRadioButtonF);
         jRadioButtonF.setForeground(new java.awt.Color(240, 240, 240));
@@ -102,7 +194,7 @@ public class usuario extends javax.swing.JFrame {
         jRadioButtonF.setEnabled(false);
         jRadioButtonF.setOpaque(false);
         getContentPane().add(jRadioButtonF);
-        jRadioButtonF.setBounds(180, 370, 80, 23);
+        jRadioButtonF.setBounds(180, 370, 80, 28);
 
         buttonGroup1.add(jRadioButtonM);
         jRadioButtonM.setForeground(new java.awt.Color(240, 240, 240));
@@ -110,7 +202,7 @@ public class usuario extends javax.swing.JFrame {
         jRadioButtonM.setEnabled(false);
         jRadioButtonM.setOpaque(false);
         getContentPane().add(jRadioButtonM);
-        jRadioButtonM.setBounds(70, 370, 80, 23);
+        jRadioButtonM.setBounds(70, 370, 80, 28);
 
         jFormattedTextFieldData.setEditable(false);
         jFormattedTextFieldData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
@@ -147,24 +239,75 @@ public class usuario extends javax.swing.JFrame {
 
         jButtonEditar.setText("Editar");
         jButtonEditar.setOpaque(false);
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditarActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButtonEditar);
-        jButtonEditar.setBounds(780, 530, 90, 23);
+        jButtonEditar.setBounds(760, 580, 90, 32);
 
-        jButtonEditar1.setText("Reservas");
-        jButtonEditar1.setOpaque(false);
-        getContentPane().add(jButtonEditar1);
-        jButtonEditar1.setBounds(780, 580, 90, 23);
+        jLabelWarning.setForeground(new java.awt.Color(153, 0, 0));
+        getContentPane().add(jLabelWarning);
+        jLabelWarning.setBounds(540, 80, 340, 30);
 
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
-        Background.setMaximumSize(new java.awt.Dimension(932, 659));
-        Background.setMinimumSize(new java.awt.Dimension(932, 659));
-        Background.setPreferredSize(new java.awt.Dimension(932, 659));
         getContentPane().add(Background);
         Background.setBounds(0, 0, 932, 659);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        // TODO add your handling code here:
+        int userTypeID;
+        String gender;
+
+        if(jTextFieldUser_type.getText().toLowerCase().charAt(0) == 'p') userTypeID = 1;
+        else userTypeID = 2;
+    //            if(jTextFieldUser_type.getText().toLowerCase().charAt(0) == 'a') userTypeID = 2;
+
+        if(jRadioButtonF.isSelected()) gender = "F";
+        else gender = "M";
+        
+        if(!isEditable){
+            edit();
+        }else if(usr == null){
+            
+            try {
+                dbh.addUser(
+                        jTextFieldId_user.getText(),
+                        jTextFieldCpf.getText(),
+                        userTypeID,
+                        jTextFieldEmail.getText(),
+                        jTextFieldNumber.getText(),
+                        jTextFieldName.getText(),
+                        gender.charAt(0),
+                        formatDateBackStr(jFormattedTextFieldData.getText()));
+                
+                usr = dbh.getUserByCPF(jTextFieldCpf.getText());
+            } catch (KeyExistsException ex) {
+                Logger.getLogger(usuario.class.getName()).log(Level.SEVERE, null, ex);
+                jLabelWarning.setText("Conflito, o usuário já existe!");
+            } catch (KeyNotFoundException ex) {
+                Logger.getLogger(usuario.class.getName()).log(Level.SEVERE, null, ex);
+                jLabelWarning.setText("Usuário não encontrado.");
+            }
+            
+        }else{
+            usr.setUserTypeID((byte) userTypeID);
+            usr.setUserTypeDescription(jTextFieldUser_type.getText());
+            usr.setCpf(jTextFieldCpf.toString());
+            usr.setName(jTextFieldName.toString());
+            usr.setGender(gender);
+            usr.setBirth(formatDateBack(jFormattedTextFieldData.getText()));
+            usr.setPhoneNumber(jTextFieldNumber.getText());
+            usr.setEmail(jTextFieldEmail.getText());
+        }
+        
+        
+    }//GEN-LAST:event_jButtonEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,7 +348,6 @@ public class usuario extends javax.swing.JFrame {
     private javax.swing.JLabel Background;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButtonEditar;
-    private javax.swing.JButton jButtonEditar1;
     private javax.swing.JFormattedTextField jFormattedTextFieldData;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelCpf;
@@ -215,6 +357,7 @@ public class usuario extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelName;
     private javax.swing.JLabel jLabelNumber;
     private javax.swing.JLabel jLabelUser_type;
+    private javax.swing.JLabel jLabelWarning;
     private javax.swing.JRadioButton jRadioButtonF;
     private javax.swing.JRadioButton jRadioButtonM;
     private javax.swing.JTextField jTextFieldCpf;
@@ -224,4 +367,7 @@ public class usuario extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldNumber;
     private javax.swing.JTextField jTextFieldUser_type;
     // End of variables declaration//GEN-END:variables
+    private User usr;
+    private boolean isEditable;
+    DatabaseHelper dbh;
 }

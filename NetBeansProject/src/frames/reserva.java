@@ -5,6 +5,10 @@
  */
 package frames;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import roombooking.*;
+
 /**
  *
  * @author Jonathan
@@ -42,7 +46,6 @@ public class reserva extends javax.swing.JFrame {
         jFormattedTextFieldData = new javax.swing.JFormattedTextField();
         jFormattedTextFieldHora = new javax.swing.JFormattedTextField();
         jSpinnerDemanda = new javax.swing.JSpinner();
-        jButtonEditar = new javax.swing.JButton();
         jButtonSalvar = new javax.swing.JButton();
         Background = new javax.swing.JLabel();
 
@@ -81,53 +84,45 @@ public class reserva extends javax.swing.JFrame {
         getContentPane().add(jLabelDemanda);
         jLabelDemanda.setBounds(70, 480, 54, 16);
 
-        jTextFieldID1.setEditable(false);
         jTextFieldID1.setPreferredSize(new java.awt.Dimension(270, 24));
         getContentPane().add(jTextFieldID1);
         jTextFieldID1.setBounds(71, 96, 270, 30);
 
-        jTextFieldUsuario.setEditable(false);
         jTextFieldUsuario.setPreferredSize(new java.awt.Dimension(270, 24));
         getContentPane().add(jTextFieldUsuario);
         jTextFieldUsuario.setBounds(71, 166, 270, 30);
 
-        jTextFieldSala.setEditable(false);
         jTextFieldSala.setPreferredSize(new java.awt.Dimension(270, 24));
         getContentPane().add(jTextFieldSala);
         jTextFieldSala.setBounds(71, 236, 270, 30);
 
-        jTextPaneObjetivo.setEditable(false);
         jScrollPaneObejtivo.setViewportView(jTextPaneObjetivo);
 
         getContentPane().add(jScrollPaneObejtivo);
         jScrollPaneObejtivo.setBounds(71, 306, 270, 65);
 
-        jFormattedTextFieldData.setEditable(false);
         jFormattedTextFieldData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
         jFormattedTextFieldData.setText("DD/MM/AAAA");
         getContentPane().add(jFormattedTextFieldData);
         jFormattedTextFieldData.setBounds(70, 420, 90, 30);
 
-        jFormattedTextFieldHora.setEditable(false);
         jFormattedTextFieldHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT))));
         jFormattedTextFieldHora.setText("HH:mm");
         getContentPane().add(jFormattedTextFieldHora);
         jFormattedTextFieldHora.setBounds(180, 420, 91, 30);
 
         jSpinnerDemanda.setModel(new javax.swing.SpinnerNumberModel());
-        jSpinnerDemanda.setEnabled(false);
         jSpinnerDemanda.setOpaque(false);
         getContentPane().add(jSpinnerDemanda);
         jSpinnerDemanda.setBounds(70, 500, 54, 26);
 
-        jButtonEditar.setText("Editar");
-        jButtonEditar.setOpaque(false);
-        jButtonEditar.setPreferredSize(new java.awt.Dimension(66, 32));
-        getContentPane().add(jButtonEditar);
-        jButtonEditar.setBounds(830, 540, 66, 32);
-
         jButtonSalvar.setText("Salvar");
         jButtonSalvar.setOpaque(false);
+        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButtonSalvar);
         jButtonSalvar.setBounds(830, 590, 66, 32);
 
@@ -138,6 +133,22 @@ public class reserva extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+        // TODO add your handling code here:
+        DatabaseHelper dbh = new DatabaseHelper();
+        
+        try {
+            dbh.addBooking(
+                    jTextFieldUsuario.getText(),
+                    jTextFieldSala.getText(),
+                    jTextPaneObjetivo.getText(),
+                    (Integer) jSpinnerDemanda.getValue(),
+                    jFormattedTextFieldData.getText()+jFormattedTextFieldHora.getText()); //  <-----  ajustar isso aqui
+        } catch (KeyExistsException ex) {
+            Logger.getLogger(reserva.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -176,7 +187,6 @@ public class reserva extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Background;
-    private javax.swing.JButton jButtonEditar;
     private javax.swing.JButton jButtonSalvar;
     private javax.swing.JFormattedTextField jFormattedTextFieldData;
     private javax.swing.JFormattedTextField jFormattedTextFieldHora;

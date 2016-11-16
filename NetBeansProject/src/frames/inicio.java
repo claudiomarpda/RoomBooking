@@ -53,7 +53,16 @@ public class inicio extends javax.swing.JFrame {
         jLabel_reserva.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel_reserva.setForeground(new java.awt.Color(255, 255, 255));
         jLabel_reserva.setText(" Adicionar reserva");
+<<<<<<< HEAD
         jLabel_reserva.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+=======
+        jLabel_reserva.setOpaque(true);
+        jLabel_reserva.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel_reservaMouseReleased(evt);
+            }
+        });
+>>>>>>> Jonathan
         getContentPane().add(jLabel_reserva);
         jLabel_reserva.setBounds(510, 110, 320, 170);
 
@@ -96,6 +105,7 @@ public class inicio extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel_usuarioMouseReleased
 
+<<<<<<< HEAD
 //    /**
 //     * @param args the command line arguments
 //     */
@@ -130,6 +140,48 @@ public class inicio extends javax.swing.JFrame {
 //            }
 //        });
 //    }
+=======
+    private void jLabel_reservaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_reservaMouseReleased
+        // TODO add your handling code here:
+        new reserva().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel_reservaMouseReleased
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new inicio().setVisible(true);
+            }
+        });
+    }
+>>>>>>> Jonathan
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Background;

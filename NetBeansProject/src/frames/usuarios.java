@@ -5,7 +5,9 @@
  */
 package frames;
 
-import javax.swing.DefaultListModel;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import roombooking.*;
 
 /**
  *
@@ -18,6 +20,19 @@ public class usuarios extends javax.swing.JFrame {
      */
     public usuarios() {
         initComponents();
+        
+        helper = new DatabaseHelper();
+        users = helper.getAllUsers();
+        
+        
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        dtm.addColumn("nome");
+        dtm.addColumn("matrícula");
+        dtm.addColumn("vínculo");
+        
+        users.stream().forEach((usr) -> {
+            dtm.addRow(new Object[]{usr.getName(), usr.getUserID(), usr.getUserTypeDescription()});
+        });
     }
 
     /**
@@ -32,9 +47,9 @@ public class usuarios extends javax.swing.JFrame {
         jButtonAdicionar = new javax.swing.JButton();
         jButtonVizualizar = new javax.swing.JButton();
         jButtonInicio = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
         jButtonFiltrar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -51,7 +66,7 @@ public class usuarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButtonAdicionar);
-        jButtonAdicionar.setBounds(800, 520, 80, 23);
+        jButtonAdicionar.setBounds(800, 520, 80, 32);
 
         jButtonVizualizar.setText("Vizualizar");
         jButtonVizualizar.setOpaque(false);
@@ -61,19 +76,17 @@ public class usuarios extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButtonVizualizar);
-        jButtonVizualizar.setBounds(800, 570, 80, 23);
+        jButtonVizualizar.setBounds(800, 570, 80, 32);
 
         jButtonInicio.setText("Inicio");
         jButtonInicio.setOpaque(false);
+        jButtonInicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonInicioActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButtonInicio);
-        jButtonInicio.setBounds(70, 80, 57, 23);
-
-        jList1.setBackground(new java.awt.Color(6, 89, 119));
-        jList1.setModel(new DefaultListModel());
-        jScrollPane1.setViewportView(jList1);
-
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(70, 150, 690, 450);
+        jButtonInicio.setBounds(70, 80, 60, 32);
 
         jButtonFiltrar.setText("Filtrar");
         jButtonFiltrar.setOpaque(false);
@@ -85,6 +98,12 @@ public class usuarios extends javax.swing.JFrame {
         });
         getContentPane().add(jButtonFiltrar);
         jButtonFiltrar.setBounds(800, 150, 77, 23);
+
+        jTable1.setModel(new DefaultTableModel());
+        jScrollPane2.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane2);
+        jScrollPane2.setBounds(80, 130, 700, 470);
 
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
         Background.setMaximumSize(new java.awt.Dimension(933, 660));
@@ -101,11 +120,19 @@ public class usuarios extends javax.swing.JFrame {
 
     private void jButtonVizualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVizualizarActionPerformed
         // TODO add your handling code here:
+        new usuario(users.get(jTable1.getSelectedRow())).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButtonVizualizarActionPerformed
 
     private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
         // TODO add your handling code here:
+        new usuario().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
+
+    private void jButtonInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInicioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonInicioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -148,7 +175,9 @@ public class usuarios extends javax.swing.JFrame {
     private javax.swing.JButton jButtonFiltrar;
     private javax.swing.JButton jButtonInicio;
     private javax.swing.JButton jButtonVizualizar;
-    private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+    DatabaseHelper helper;
+    ArrayList<User> users;
 }
