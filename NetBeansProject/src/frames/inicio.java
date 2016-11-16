@@ -57,6 +57,11 @@ public class inicio extends javax.swing.JFrame {
         jLabel_reserva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/reserva.png"))); // NOI18N
         jLabel_reserva.setText(" Adicionar reserva");
         jLabel_reserva.setOpaque(true);
+        jLabel_reserva.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel_reservaMouseReleased(evt);
+            }
+        });
         getContentPane().add(jLabel_reserva);
         jLabel_reserva.setBounds(510, 110, 320, 170);
 
@@ -98,6 +103,12 @@ public class inicio extends javax.swing.JFrame {
         new usuarios().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel_usuarioMouseReleased
+
+    private void jLabel_reservaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_reservaMouseReleased
+        // TODO add your handling code here:
+        new reserva().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel_reservaMouseReleased
 
     /**
      * @param args the command line arguments
