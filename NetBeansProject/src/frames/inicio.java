@@ -108,7 +108,7 @@ public class inicio extends javax.swing.JFrame {
 
     private void jLabel_usuarioMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_usuarioMouseReleased
         // TODO add your handling code here:
-        new usuarios().setVisible(true);
+//        new usuarios().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel_usuarioMouseReleased
 

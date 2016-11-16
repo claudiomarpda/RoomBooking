@@ -18,17 +18,17 @@ public class usuarios extends javax.swing.JFrame {
     /**
      * Creates new form usuarios
      */
-    public usuarios() {
+    public usuarios(DatabaseHelper helper, User currentUser) {
         initComponents();
         
-        helper = new DatabaseHelper();
+        this.helper = helper;
         users = helper.getAllUsers();
         
         
         DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
-        dtm.addColumn("nome");
-        dtm.addColumn("matrícula");
-        dtm.addColumn("vínculo");
+        dtm.addColumn("NOME");
+        dtm.addColumn("MATRÍCULA");
+        dtm.addColumn("VÍNCULO");
         
         users.stream().forEach((usr) -> {
             dtm.addRow(new Object[]{usr.getName(), usr.getUserID(), usr.getUserTypeDescription()});
@@ -50,6 +50,7 @@ public class usuarios extends javax.swing.JFrame {
         jButtonFiltrar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jTextFieldFiltro = new javax.swing.JTextField();
         Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -60,50 +61,64 @@ public class usuarios extends javax.swing.JFrame {
 
         jButtonAdicionar.setText("Adicionar");
         jButtonAdicionar.setOpaque(false);
+        jButtonAdicionar.setPreferredSize(new java.awt.Dimension(80, 30));
         jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAdicionarActionPerformed(evt);
             }
         });
         getContentPane().add(jButtonAdicionar);
-        jButtonAdicionar.setBounds(800, 520, 80, 32);
+        jButtonAdicionar.setBounds(800, 520, 80, 30);
 
         jButtonVizualizar.setText("Vizualizar");
         jButtonVizualizar.setOpaque(false);
+        jButtonVizualizar.setPreferredSize(new java.awt.Dimension(80, 30));
         jButtonVizualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonVizualizarActionPerformed(evt);
             }
         });
         getContentPane().add(jButtonVizualizar);
-        jButtonVizualizar.setBounds(800, 570, 80, 32);
+        jButtonVizualizar.setBounds(800, 570, 80, 30);
 
         jButtonInicio.setText("Inicio");
+        jButtonInicio.setMaximumSize(new java.awt.Dimension(80, 30));
+        jButtonInicio.setMinimumSize(new java.awt.Dimension(80, 30));
         jButtonInicio.setOpaque(false);
+        jButtonInicio.setPreferredSize(new java.awt.Dimension(80, 30));
         jButtonInicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonInicioActionPerformed(evt);
             }
         });
         getContentPane().add(jButtonInicio);
-        jButtonInicio.setBounds(70, 80, 60, 32);
+        jButtonInicio.setBounds(80, 80, 80, 30);
 
         jButtonFiltrar.setText("Filtrar");
         jButtonFiltrar.setOpaque(false);
-        jButtonFiltrar.setPreferredSize(new java.awt.Dimension(77, 23));
+        jButtonFiltrar.setPreferredSize(new java.awt.Dimension(80, 30));
         jButtonFiltrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFiltrarActionPerformed(evt);
             }
         });
         getContentPane().add(jButtonFiltrar);
-        jButtonFiltrar.setBounds(800, 150, 77, 23);
+        jButtonFiltrar.setBounds(800, 150, 80, 30);
 
         jTable1.setModel(new DefaultTableModel());
         jScrollPane2.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane2);
-        jScrollPane2.setBounds(80, 130, 700, 470);
+        jScrollPane2.setBounds(80, 190, 700, 410);
+
+        jTextFieldFiltro.setPreferredSize(new java.awt.Dimension(6, 30));
+        jTextFieldFiltro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldFiltroActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jTextFieldFiltro);
+        jTextFieldFiltro.setBounds(80, 150, 700, 30);
 
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
         Background.setMaximumSize(new java.awt.Dimension(933, 660));
@@ -116,23 +131,41 @@ public class usuarios extends javax.swing.JFrame {
 
     private void jButtonFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFiltrarActionPerformed
         // TODO add your handling code here:
+        users = helper.getUsersLike(jTextFieldFiltro.getText());
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        
+        while(dtm.getRowCount() > 0){
+            dtm.removeRow(0);
+        }
+        
+        users.stream().forEach((usr) -> {
+            dtm.addRow(new Object[]{usr.getName(), usr.getUserID(), usr.getUserTypeDescription()});
+        });
+        
     }//GEN-LAST:event_jButtonFiltrarActionPerformed
 
     private void jButtonVizualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVizualizarActionPerformed
         // TODO add your handling code here:
-        new usuario(users.get(jTable1.getSelectedRow())).setVisible(true);
+        new usuario(helper, currentUser, users.get(jTable1.getSelectedRow())).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonVizualizarActionPerformed
 
     private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
         // TODO add your handling code here:
-        new usuario().setVisible(true);
+        new usuario(helper, currentUser).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
     private void jButtonInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInicioActionPerformed
         // TODO add your handling code here:
+        new inicio(helper, currentUser).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButtonInicioActionPerformed
+
+    private void jTextFieldFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFiltroActionPerformed
+        // TODO add your handling code here:
+        jButtonFiltrarActionPerformed(evt);
+    }//GEN-LAST:event_jTextFieldFiltroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -164,7 +197,7 @@ public class usuarios extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new usuarios().setVisible(true);
+                new usuarios(new DatabaseHelper(), new User()).setVisible(true);
             }
         });
     }
@@ -177,7 +210,9 @@ public class usuarios extends javax.swing.JFrame {
     private javax.swing.JButton jButtonVizualizar;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextFieldFiltro;
     // End of variables declaration//GEN-END:variables
     DatabaseHelper helper;
     ArrayList<User> users;
+    User currentUser;
 }
