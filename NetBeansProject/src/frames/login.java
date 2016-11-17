@@ -130,6 +130,11 @@ public class login extends javax.swing.JFrame {
             User user = null;
             try {
                 user = mDatabaseHelper.getUserByID(loginInput);
+                if(user.getActive() == 0){
+                    jFeedBackLabel.setVisible(true);
+                    jFeedBackLabel.setText("Usuário inativo.");
+                    return;
+                }
                 if (user.getUserID().equals(loginInput)) {
                     if (passwordInput.equals(user.getPassword())) {
                         startsInitialScreen(user);

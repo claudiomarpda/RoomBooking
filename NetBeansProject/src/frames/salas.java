@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package frames;
 
 import java.util.ArrayList;
@@ -20,7 +15,9 @@ public class salas extends javax.swing.JFrame {
 
     private DatabaseHelper database;
     private User user;
-
+    private ArrayList<Room> roomList;
+    private DefaultTableModel dtm;
+    
     /**
      * Creates new form usuarios
      */
@@ -29,36 +26,10 @@ public class salas extends javax.swing.JFrame {
         this.database = database;
         this.user = user;
 
-        ArrayList<Room> rooms = database.getAllRooms();
-
-        //DefaultTableModel dtm0 = (DefaultTableModel) jTable1.getModel();
-        DefaultTableModel dtm = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
-        jTable1.setModel(dtm);
-
-        dtm.addColumn("ID");
-        dtm.addColumn("TIPO");
-        dtm.addColumn("ANDAR");
-        dtm.addColumn("CAPACIDADE");
-        dtm.addColumn("PROJETOR");
-        dtm.addColumn("COMPUTADORES");
-
-        rooms.stream().forEach((room) -> {
-            dtm.addRow(new Object[]{
-                room.getRoomID(),
-                room.getRoomTypeDescription(),
-                room.getFloor(),
-                room.getCapacity(),
-                room.HasProjector() ? "SIM" : "NÃO",
-                room.getNumberOfComputers()
-            });
-        });
-
+        roomList = database.getAllRooms();
+        
+        setJTableNotEditable(jTable1);
+        
         jButtonCancelar.setVisible(false);
         if (user != null) {
             if (user.getUserTypeID() != User.ADMIN) {
@@ -139,17 +110,71 @@ public class salas extends javax.swing.JFrame {
         // TODO add your handling code here:
         jButtonEditar.setText("Editar");
         jButtonCancelar.setVisible(false);
+        
+        setJTableNotEditable(jTable1);
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
-        if ("Editar".equals(jButtonEditar.getText())) {
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow == -1) { // no row selected
+            return;
+        }
+
+        if (jButtonEditar.getText().equals("Editar")) {
             jButtonEditar.setText("Salvar");
             jButtonCancelar.setVisible(true);
+
+            setJTableRowEditable(jTable1, selectedRow);
+
         } else {
             jButtonEditar.setText("Editar");
             jButtonCancelar.setVisible(false);
+            setJTableNotEditable(jTable1);
         }
     }//GEN-LAST:event_jButtonEditarActionPerformed
+
+    private void setValuesToTableModel(DefaultTableModel dtm) {
+        dtm.addColumn("ID");
+        dtm.addColumn("TIPO");
+        dtm.addColumn("ANDAR");
+        dtm.addColumn("CAPACIDADE");
+        dtm.addColumn("PROJETOR");
+        dtm.addColumn("COMPUTADORES");
+
+        roomList.stream().forEach((room) -> {
+            dtm.addRow(new Object[]{
+                room.getRoomID(),
+                room.getRoomTypeDescription(),
+                room.getFloor(),
+                room.getCapacity(),
+                room.HasProjector() ? "SIM" : "NÃO",
+                room.getNumberOfComputers()
+            });
+        });
+    }
+
+    private void setJTableRowEditable(JTable jTable, int selectedRow) {
+        DefaultTableModel dtm = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return row == selectedRow;
+            }
+        };
+        jTable.setModel(dtm);
+        setValuesToTableModel(dtm);
+    }
+
+    private void setJTableNotEditable(JTable jTable) {
+        DefaultTableModel dtm = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        jTable.setModel(dtm);
+        setValuesToTableModel(dtm);
+    }
 
     private void jButtonInicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonInicioMouseClicked
         new inicio(database, user).setVisible(true);
