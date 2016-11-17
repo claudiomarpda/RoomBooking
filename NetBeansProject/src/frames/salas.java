@@ -31,7 +31,7 @@ public class salas extends javax.swing.JFrame {
 
         ArrayList<Room> rooms = database.getAllRooms();
 
-        DefaultTableModel dtm0 = (DefaultTableModel) jTable1.getModel();
+        //DefaultTableModel dtm0 = (DefaultTableModel) jTable1.getModel();
         DefaultTableModel dtm = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -49,7 +49,6 @@ public class salas extends javax.swing.JFrame {
         dtm.addColumn("COMPUTADORES");
 
         rooms.stream().forEach((room) -> {
-            System.out.println(room.toString());
             dtm.addRow(new Object[]{
                 room.getRoomID(),
                 room.getRoomTypeDescription(),
@@ -61,8 +60,10 @@ public class salas extends javax.swing.JFrame {
         });
 
         jButtonCancelar.setVisible(false);
-        if (user.getUserTypeID() != User.ADM) {
-            jButtonEditar.setVisible(false);
+        if (user != null) {
+            if (user.getUserTypeID() != User.ADMIN) {
+                jButtonEditar.setVisible(false);
+            }
         }
     }
 
@@ -78,7 +79,6 @@ public class salas extends javax.swing.JFrame {
         jButtonEditar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
         jButtonInicio = new javax.swing.JButton();
-        jButtonFiltrar = new javax.swing.JButton();
         jScrollPaneTable = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         Background = new javax.swing.JLabel();
@@ -119,17 +119,6 @@ public class salas extends javax.swing.JFrame {
         getContentPane().add(jButtonInicio);
         jButtonInicio.setBounds(70, 80, 60, 32);
 
-        jButtonFiltrar.setText("Filtrar");
-        jButtonFiltrar.setOpaque(false);
-        jButtonFiltrar.setPreferredSize(new java.awt.Dimension(77, 23));
-        jButtonFiltrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonFiltrarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButtonFiltrar);
-        jButtonFiltrar.setBounds(800, 150, 77, 23);
-
         jTable1.setModel(new DefaultTableModel());
         jTable1.setPreferredSize(new java.awt.Dimension(480, 320));
         jScrollPaneTable.setViewportView(jTable1);
@@ -146,10 +135,6 @@ public class salas extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFiltrarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonFiltrarActionPerformed
-
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
         jButtonEditar.setText("Editar");
@@ -157,7 +142,7 @@ public class salas extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
-        if (jButtonEditar.getText() == "Editar") {
+        if ("Editar".equals(jButtonEditar.getText())) {
             jButtonEditar.setText("Salvar");
             jButtonCancelar.setVisible(true);
         } else {
@@ -171,46 +156,10 @@ public class salas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButtonInicioMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(salas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(salas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(salas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(salas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new usuarios().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Background;
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonEditar;
-    private javax.swing.JButton jButtonFiltrar;
     private javax.swing.JButton jButtonInicio;
     private javax.swing.JScrollPane jScrollPaneTable;
     private javax.swing.JTable jTable1;

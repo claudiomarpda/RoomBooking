@@ -290,7 +290,7 @@ public final class DatabaseHelper {
                 + " LEFT JOIN " + EMAIL + " ON " + PERSON + "." + CPF + " = " + EMAIL + "." + CPF;
 
         readAllUsersStatement = mConnection.prepareStatement(
-                allUsersQuery
+                allUsersQuery + " ORDER BY " + PERSON + "." + NAME
         );
 
         readUserByCPFStatement = mConnection.prepareStatement(
@@ -315,6 +315,7 @@ public final class DatabaseHelper {
         readUsersLikeStatement = mConnection.prepareStatement(
                 allUsersQuery
                 + " WHERE " + PERSON + "." + NAME + " LIKE ?"
+                + " ORDER BY " + PERSON + "." + NAME
         );
 
         activationUserStatement = mConnection.prepareStatement(
@@ -380,7 +381,7 @@ public final class DatabaseHelper {
                 + " LEFT JOIN " + ROOM_TYPE + " ON " + ROOM_TYPE + "." + ROOM_TYPE_ID + " = " + ROOM + "." + ROOM_TYPE;
 
         readAllRoomsStatement = mConnection.prepareStatement(
-                allRoomsQuery
+                allRoomsQuery + " ORDER BY " + ROOM + "." + ROOM_ID
         );
 
         readRoomsByTypeStatement = mConnection.prepareStatement(

@@ -14,22 +14,30 @@ import roombooking.*;
  * @author Jonathan
  */
 public class usuarios extends javax.swing.JFrame {
-    
+
     /**
      * Creates new form usuarios
      */
     public usuarios(DatabaseHelper helper, User currentUser) {
         initComponents();
-        
+
         this.helper = helper;
         users = helper.getAllUsers();
-        
-        
-        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+
+        DefaultTableModel dtm = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        jTable1.setModel(dtm);
+
+        //DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
         dtm.addColumn("NOME");
         dtm.addColumn("MATRÍCULA");
         dtm.addColumn("VÍNCULO");
-        
+
         users.stream().forEach((usr) -> {
             dtm.addRow(new Object[]{usr.getName(), usr.getUserID(), usr.getUserTypeDescription()});
         });
@@ -133,15 +141,15 @@ public class usuarios extends javax.swing.JFrame {
         // TODO add your handling code here:
         users = helper.getUsersLike(jTextFieldFiltro.getText());
         DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
-        
-        while(dtm.getRowCount() > 0){
+
+        while (dtm.getRowCount() > 0) {
             dtm.removeRow(0);
         }
-        
+
         users.stream().forEach((usr) -> {
             dtm.addRow(new Object[]{usr.getName(), usr.getUserID(), usr.getUserTypeDescription()});
         });
-        
+
     }//GEN-LAST:event_jButtonFiltrarActionPerformed
 
     private void jButtonVizualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVizualizarActionPerformed

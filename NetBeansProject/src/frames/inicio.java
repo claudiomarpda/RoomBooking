@@ -2,12 +2,6 @@ package frames;
 
 import roombooking.*;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author Jonathan
@@ -44,11 +38,9 @@ public class inicio extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(932, 659));
         getContentPane().setLayout(null);
 
-        jLabel_salas.setBackground(new java.awt.Color(0, 102, 204));
         jLabel_salas.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_salas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/salas.png"))); // NOI18N
         jLabel_salas.setText(" Salas");
-        jLabel_salas.setOpaque(true);
+        jLabel_salas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jLabel_salas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel_salasMouseClicked(evt);
@@ -60,11 +52,9 @@ public class inicio extends javax.swing.JFrame {
         getContentPane().add(jLabel_salas);
         jLabel_salas.setBounds(100, 110, 320, 170);
 
-        jLabel_reserva.setBackground(new java.awt.Color(0, 102, 204));
         jLabel_reserva.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_reserva.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/reserva.png"))); // NOI18N
         jLabel_reserva.setText(" Adicionar reserva");
-        jLabel_reserva.setOpaque(true);
+        jLabel_reserva.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jLabel_reserva.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jLabel_reservaMouseReleased(evt);
@@ -73,11 +63,9 @@ public class inicio extends javax.swing.JFrame {
         getContentPane().add(jLabel_reserva);
         jLabel_reserva.setBounds(510, 110, 320, 170);
 
-        jLabel_usuario.setBackground(new java.awt.Color(0, 102, 204));
         jLabel_usuario.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_usuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/usuario.png"))); // NOI18N
         jLabel_usuario.setText(" Usuário");
-        jLabel_usuario.setOpaque(true);
+        jLabel_usuario.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jLabel_usuario.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jLabel_usuarioMouseReleased(evt);
@@ -86,11 +74,9 @@ public class inicio extends javax.swing.JFrame {
         getContentPane().add(jLabel_usuario);
         jLabel_usuario.setBounds(100, 390, 320, 170);
 
-        jLabel_disponibilidade.setBackground(new java.awt.Color(0, 102, 204));
         jLabel_disponibilidade.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_disponibilidade.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/disponibilidade.png"))); // NOI18N
         jLabel_disponibilidade.setText(" Disponibilidadede");
-        jLabel_disponibilidade.setOpaque(true);
+        jLabel_disponibilidade.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         getContentPane().add(jLabel_disponibilidade);
         jLabel_disponibilidade.setBounds(510, 390, 320, 170);
 
@@ -107,8 +93,12 @@ public class inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel_salasMouseReleased
 
     private void jLabel_usuarioMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_usuarioMouseReleased
-        // TODO add your handling code here:
-//        new usuarios().setVisible(true);
+        if(user.getUserTypeID() == User.ADMIN){
+            new usuarios(helper, user).setVisible(true);
+        }
+        else{
+            new usuario(helper, user, user).setVisible(true);
+        }
         this.dispose();
     }//GEN-LAST:event_jLabel_usuarioMouseReleased
 

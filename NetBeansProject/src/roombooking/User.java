@@ -7,7 +7,9 @@ import java.sql.Date;
  */
 public class User extends Person {
     
-    public static final int ADM = 3; // user type id
+    public static final int PROFESSOR = 1; // user type id
+    public static final int STUDENT = 2;
+    public static final int ADMIN = 3;
     
     private String userID;
     private int userTypeID;

@@ -119,11 +119,12 @@ public class RoomBooking {
          */
         /*
         User u = mDatabaseHelper.getUserByCPF("112");
-        //u.setCpf("119");
-        //mDatabaseHelper.updateUser(u.getUserID(), u);
+        u.setCpf("113");
+        mDatabaseHelper.updateUser(u.getUserID(), u);
         mDatabaseHelper.reverseUserActivation(u);
         System.out.println(u.getActive());
-         */
+        */
+         
  /*
         Booking b = mDatabaseHelper.getBookingsByUserID("20163").get(0);
         mDatabaseHelper.updateBooking(1, b, "2017-12-20 07:00 AM");
@@ -141,6 +142,7 @@ public class RoomBooking {
         mDatabaseHelper.updateUserType(2, "Aluno");
         System.out.println(mDatabaseHelper.getUsersLike("an").toString());
          */
+         
         mDatabaseHelper.closeConnection();
     }
 
