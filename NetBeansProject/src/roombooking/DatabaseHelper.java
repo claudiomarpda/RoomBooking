@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,6 +119,7 @@ public final class DatabaseHelper {
     private PreparedStatement readAllUsersStatement;
     private PreparedStatement readAllRoomsStatement;
     private PreparedStatement readRoomsByTypeStatement;
+    private PreparedStatement readRoomByIDStatement;
     private PreparedStatement readAllBookingsStatement;
     private PreparedStatement readBookingsByUserIDStatement;
     private PreparedStatement readUsersLikeStatement;
@@ -396,7 +398,8 @@ public final class DatabaseHelper {
                 + FLOOR + " = ?, "
                 + ROOM_CAPACITY + " = ?, "
                 + HAS_PROJECTOR + " = ?, "
-                + NUM_COMPUTERS + " = ? "
+                + NUM_COMPUTERS + " = ?, "
+                + ACTIVE + " = ? "
                 + "WHERE " + ROOM_ID + " = ?"
         );
 
@@ -404,6 +407,11 @@ public final class DatabaseHelper {
                 "UPDATE " + ROOM + " SET "
                 + ACTIVE + " = ? "
                 + "WHERE " + ROOM_ID + " = ?"
+        );
+
+        readRoomByIDStatement = mConnection.prepareStatement(
+                allRoomsQuery
+                + " WHERE " + ROOM_ID + " = ?"
         );
     }
 
@@ -417,7 +425,9 @@ public final class DatabaseHelper {
                 "INSERT INTO " + BOOKING
                 + "(" + USER + ", " + ROOM + ", "
                 + GOAL + ", " + NUM_PEOPLE + ", " + DATE_TIME + ")"
-                + "VALUES (?, ?, ?, ?, STR_TO_DATE(?, '" + MY_DATE_FORMAT + "') )");
+                //+ "VALUES (?, ?, ?, ?, STR_TO_DATE(?, '" + MY_DATE_FORMAT + "') )");
+                + "VALUES (?, ?, ?, ?, ? )"
+        );
 
         rmBookingStatement = mConnection.prepareStatement(
                 "DELETE FROM " + BOOKING
@@ -427,7 +437,7 @@ public final class DatabaseHelper {
                 + " FROM " + BOOKING;
 
         readAllBookingsStatement = mConnection.prepareStatement(
-                allBookingsQuery
+                allBookingsQuery + " ORDER BY " + BOOKING_ID + " DESC"
         );
         readBookingsByUserIDStatement = mConnection.prepareStatement(
                 allBookingsQuery
@@ -448,6 +458,7 @@ public final class DatabaseHelper {
                 + DATE_TIME + " = STR_TO_DATE(?, '" + MY_DATE_FORMAT + "') "
                 + "WHERE " + BOOKING_ID + " = ?"
         );
+
     }
 
     // ---------------- Start of CREATE methods ----------------
@@ -613,7 +624,7 @@ public final class DatabaseHelper {
      * Creates a new booking in Booking table.
      */
     public boolean addBooking(String userID, String roomID, String goal, int numberOfPeople,
-            String dateTime) throws KeyExistsException {
+            Timestamp dateTime) throws KeyExistsException {
 
         /* 
         Verifies booking existence before inserting in the table in order to 
@@ -627,7 +638,7 @@ public final class DatabaseHelper {
             addBookingStatement.setString(2, roomID);
             addBookingStatement.setString(3, goal);
             addBookingStatement.setInt(4, numberOfPeople);
-            addBookingStatement.setString(5, dateTime);
+            addBookingStatement.setTimestamp(5, dateTime);
 
             addBookingStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -645,11 +656,11 @@ public final class DatabaseHelper {
      * works)
      * @return true if exists, false otherwise
      */
-    private boolean bookingExists(String roomID, String dateTime) {
+    private boolean bookingExists(String roomID, Timestamp dateTime) {
         ResultSet mResultSet = null;
         try {
             checkBookingExistence.setString(1, roomID);
-            checkBookingExistence.setString(2, dateTime);
+            checkBookingExistence.setTimestamp(2, dateTime);
             mResultSet = checkBookingExistence.executeQuery();
             if (mResultSet.next()) {
                 return true;
@@ -958,6 +969,45 @@ public final class DatabaseHelper {
         return list;
     }
 
+    private Room getRoom(ResultSet resultSet) throws SQLException {
+
+        if (!resultSet.next()) { // if the search has no result
+            return null;
+        } else {
+            resultSet.beforeFirst(); // before the first row
+        }
+
+        resultSet.next();
+
+        Room room = new Room(
+                resultSet.getInt(1), // floorID 
+                resultSet.getString(2), // floor
+                resultSet.getString(3), // roomTypeID
+                resultSet.getString(4), // roomTypeDescription
+                resultSet.getString(5), // roomID
+                resultSet.getInt(6), // capacity
+                resultSet.getBoolean(7), // hasProjector
+                resultSet.getInt(8), // numberOfComputers
+                resultSet.getInt(9) // active
+
+        );
+
+        return room;
+    }
+
+    public Room getRoomByID(String roomID) {
+        Room room = null;
+        try {
+            readRoomByIDStatement.setString(1, roomID);
+            ResultSet mResultSet = readRoomByIDStatement.executeQuery();
+            room = getRoom(mResultSet);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return room;
+    }
+
     /**
      * Gets all registered rooms in the database with getRooms method.
      *
@@ -1187,7 +1237,8 @@ public final class DatabaseHelper {
             upRoomStatement.setInt(4, room.getCapacity());
             upRoomStatement.setInt(5, (room.HasProjector() ? 1 : 0));
             upRoomStatement.setInt(6, room.getNumberOfComputers());
-            upRoomStatement.setString(7, roomID);
+            upRoomStatement.setInt(7, room.getActive());
+            upRoomStatement.setString(8, roomID);
 
             upRoomStatement.executeUpdate();
 

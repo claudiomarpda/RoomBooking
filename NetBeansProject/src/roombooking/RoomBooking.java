@@ -1,5 +1,6 @@
 package roombooking;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,7 +22,10 @@ public class RoomBooking {
         //mDatabaseHelper.addEmail("11111111111", "th@email.com");
         //mDatabaseHelper.addPhone("11111111111", "+55 083 91111-2222");
         //mDatabaseHelper.addFloor(0, "Térreo");
-        //mDatabaseHelper.addRoomType("AUL", "Aula");
+        //mDatabaseHelper.addFloor(2, "Segundo andar");
+        //mDatabaseHelper.addFloor(3, "Terceiro andar");
+        //mDatabaseHelper.addRoomType("AUL", "Sala de Aula");
+        //mDatabaseHelper.addRoomType("PROF", "Sala de Professor");
         //mDatabaseHelper.addUserType(2, "Aluno");
         //mDatabaseHelper.addUser("2015000000", "22222222222", 2);
         // mDatabaseHelper.addUser("20163", "112", 2, "jonathan@gmail.com", 
@@ -123,8 +127,7 @@ public class RoomBooking {
         mDatabaseHelper.updateUser(u.getUserID(), u);
         mDatabaseHelper.reverseUserActivation(u);
         System.out.println(u.getActive());
-        */
-         
+         */
  /*
         Booking b = mDatabaseHelper.getBookingsByUserID("20163").get(0);
         mDatabaseHelper.updateBooking(1, b, "2017-12-20 07:00 AM");
@@ -142,8 +145,42 @@ public class RoomBooking {
         mDatabaseHelper.updateUserType(2, "Aluno");
         System.out.println(mDatabaseHelper.getUsersLike("an").toString());
          */
-         
+        mDate();
         mDatabaseHelper.closeConnection();
+    }
+
+    public static void mDate() {
+//        java.util.Date dt = new java.util.Date();
+        java.text.SimpleDateFormat sdf
+                = new java.text.SimpleDateFormat("dd-MM-yyyy kk:mm");
+//        String currentTime = sdf.format(dt);
+//        System.out.println(currentTime);
+//        
+//        Timestamp t = new Timestamp(dt.getTime());
+//        System.out.println(t.toString() + "\n\n");
+
+        String mdateString = "01-12-2016 08:00";
+        java.util.Date d = null;
+        try {
+            d = sdf.parse(mdateString);
+        } catch (ParseException ex) {
+            Logger.getLogger(RoomBooking.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (d != null) {
+            System.out.println(d.toString());
+
+            Timestamp ts = new Timestamp(d.getTime());
+            System.out.println(ts);
+            String myS = sdf.format(ts);
+            System.out.println(myS);
+            //String formattedDate = writeFormat.format(date);
+        }
+        
+        
+        Timestamp ts2 = new Timestamp(System.currentTimeMillis());
+        System.out.println(ts2);
+        System.out.println(sdf.format(ts2));
+
     }
 
     /**

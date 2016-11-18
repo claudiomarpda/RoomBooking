@@ -30,7 +30,7 @@ public class inicio extends javax.swing.JFrame {
         jLabel_salas = new javax.swing.JLabel();
         jLabel_reserva = new javax.swing.JLabel();
         jLabel_usuario = new javax.swing.JLabel();
-        jLabel_disponibilidade = new javax.swing.JLabel();
+        jLabel_Reservas = new javax.swing.JLabel();
         Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -74,11 +74,16 @@ public class inicio extends javax.swing.JFrame {
         getContentPane().add(jLabel_usuario);
         jLabel_usuario.setBounds(100, 390, 320, 170);
 
-        jLabel_disponibilidade.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_disponibilidade.setText(" Disponibilidadede");
-        jLabel_disponibilidade.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        getContentPane().add(jLabel_disponibilidade);
-        jLabel_disponibilidade.setBounds(510, 390, 320, 170);
+        jLabel_Reservas.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel_Reservas.setText("Reservas");
+        jLabel_Reservas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel_Reservas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel_ReservasMouseClicked(evt);
+            }
+        });
+        getContentPane().add(jLabel_Reservas);
+        jLabel_Reservas.setBounds(510, 390, 320, 170);
 
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
         getContentPane().add(Background);
@@ -104,7 +109,7 @@ public class inicio extends javax.swing.JFrame {
 
     private void jLabel_reservaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_reservaMouseReleased
         // TODO add your handling code here:
-        new reserva().setVisible(true);
+        new AddBooking(helper, user).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel_reservaMouseReleased
 
@@ -112,6 +117,11 @@ public class inicio extends javax.swing.JFrame {
         new salas(helper, user).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel_salasMouseClicked
+
+    private void jLabel_ReservasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_ReservasMouseClicked
+        new Bookings(helper, user).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel_ReservasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -150,7 +160,7 @@ public class inicio extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Background;
-    private javax.swing.JLabel jLabel_disponibilidade;
+    private javax.swing.JLabel jLabel_Reservas;
     private javax.swing.JLabel jLabel_reserva;
     private javax.swing.JLabel jLabel_salas;
     private javax.swing.JLabel jLabel_usuario;

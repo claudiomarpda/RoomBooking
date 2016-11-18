@@ -5,6 +5,15 @@ package roombooking;
  */
 public class Room {
 
+    public static final String PROFESSOR = "Professor";
+    public static final String PROFESSOR_ID = "PROF";
+    public static final String AUDITORIO = "Auditório";
+    public static final String AUDITORIO_ID = "AUD";
+    public static final String REUNIAO = "Reunião";
+    public static final String REUNIAO_ID = "REU";
+    public static final String LABORATORIO = "Laboratório";
+    public static final String LABORATORIO_ID = "LAB";
+
     private int floorID;
     private String floor;
     private String roomTypeID;
