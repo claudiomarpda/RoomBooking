@@ -13,12 +13,12 @@ import roombooking.*;
  *
  * @author Jonathan
  */
-public class usuarios extends javax.swing.JFrame {
+public class UsersFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form usuarios
      */
-    public usuarios(DatabaseHelper helper, User currentUser) {
+    public UsersFrame(DatabaseHelper helper, User currentUser) {
         initComponents();
 
         this.helper = helper;
@@ -61,7 +61,7 @@ public class usuarios extends javax.swing.JFrame {
         jTextFieldFiltro = new javax.swing.JTextField();
         Background = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(932, 659));
         setResizable(false);
         setSize(new java.awt.Dimension(932, 659));
@@ -154,19 +154,19 @@ public class usuarios extends javax.swing.JFrame {
 
     private void jButtonVizualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVizualizarActionPerformed
         // TODO add your handling code here:
-        new usuario(helper, currentUser, users.get(jTable1.getSelectedRow())).setVisible(true);
+        new UserFrame(helper, currentUser, users.get(jTable1.getSelectedRow())).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonVizualizarActionPerformed
 
     private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
         // TODO add your handling code here:
-        new usuario(helper, currentUser).setVisible(true);
+        new UserFrame(helper, currentUser).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
     private void jButtonInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInicioActionPerformed
         // TODO add your handling code here:
-        new inicio(helper, currentUser).setVisible(true);
+        new StartFrame(helper, currentUser).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonInicioActionPerformed
 
@@ -192,20 +192,21 @@ public class usuarios extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(usuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UsersFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(usuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UsersFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(usuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UsersFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(usuarios.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UsersFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new usuarios(new DatabaseHelper(), new User()).setVisible(true);
+                new UsersFrame(new DatabaseHelper(), new User()).setVisible(true);
             }
         });
     }

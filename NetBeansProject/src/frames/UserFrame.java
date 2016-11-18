@@ -17,7 +17,7 @@ import roombooking.*;
  *
  * @author Jonathan
  */
-public class usuario extends javax.swing.JFrame {
+public class UserFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form usuario
@@ -25,7 +25,7 @@ public class usuario extends javax.swing.JFrame {
      * @param helper
      * @param currentUser
      */
-    public usuario(DatabaseHelper helper, User currentUser) {
+    public UserFrame(DatabaseHelper helper, User currentUser) {
         initComponents();
         edit();
         this.helper = helper;
@@ -38,13 +38,27 @@ public class usuario extends javax.swing.JFrame {
      * @param currentUser
      * @param usr
      */
-    public usuario(DatabaseHelper helper, User currentUser, User usr) {
+    public UserFrame(DatabaseHelper helper, User currentUser, User usr) {
         initComponents();
         isEditable = false;
         this.usr = usr;
         this.helper = helper;
         this.currentUser = currentUser;
-
+        
+        if(usr != null && currentUser != null){
+            if(currentUser.getUserTypeID() == User.ADMIN){
+                jToggleActive.setVisible(true);
+            }
+            
+            jToggleActive.setVisible(true);
+            if (usr.getActive() == 1) { // user is active
+                jToggleActive.doClick();
+            }
+        }
+        else{
+            jToggleActive.setVisible(false);
+        }
+        
         jTextFieldId_user.setText(usr.getUserID());
         jTextFieldCpf.setText(usr.getCpf());
         jTextFieldName.setText(usr.getName());
@@ -174,10 +188,10 @@ public class usuario extends javax.swing.JFrame {
         jRadioButtonStudant = new javax.swing.JRadioButton();
         jRadioButtonProfessor = new javax.swing.JRadioButton();
         jButtonEditar = new javax.swing.JButton();
+        jToggleActive = new javax.swing.JToggleButton();
         Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(932, 659));
         setMinimumSize(new java.awt.Dimension(932, 659));
         setResizable(false);
         setSize(new java.awt.Dimension(932, 670));
@@ -329,6 +343,15 @@ public class usuario extends javax.swing.JFrame {
         getContentPane().add(jButtonEditar);
         jButtonEditar.setBounds(760, 580, 80, 30);
 
+        jToggleActive.setText("Ativo");
+        jToggleActive.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleActiveActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jToggleActive);
+        jToggleActive.setBounds(510, 410, 80, 32);
+
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
         getContentPane().add(Background);
         Background.setBounds(0, 0, 932, 659);
@@ -385,10 +408,13 @@ public class usuario extends javax.swing.JFrame {
                 jLabelWarning.setForeground(Color.GREEN);
                 jLabelWarning.setText("Usuário adicionado com sucesso.");
             } catch (KeyExistsException ex) {
-                Logger.getLogger(usuario.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UserFrame.class.getName()).log(Level.SEVERE, null, ex);
                 jLabelWarning.setForeground(Color.RED);
                 jLabelWarning.setText("Conflito, o usuário já existe!");
             }
+            /*catch (KeyNotFoundException ex) {
+                Logger.getLogger(usuario.class.getName()).log(Level.SEVERE, null, ex);
+                jLabelWarning.setText("Usuário não encontrado.");
             /*catch (KeyNotFoundException ex) {
                 Logger.getLogger(usuario.class.getName()).log(Level.SEVERE, null, ex);
                 jLabelWarning.setText("Usuário não encontrado.");
@@ -414,9 +440,26 @@ public class usuario extends javax.swing.JFrame {
 
     private void jButtonInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInicioActionPerformed
         // TODO add your handling code here:
-        new inicio(helper, currentUser).setVisible(true);
+        new StartFrame(helper, currentUser).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonInicioActionPerformed
+
+    private void jToggleActiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleActiveActionPerformed
+        if(jToggleActive.getModel().isPressed()){
+            jToggleActive.setText("INATIVO");
+            jToggleActive.setForeground(Color.RED);
+        }
+        else{
+            jToggleActive.setText("ATIVO");
+            jToggleActive.setForeground(Color.GREEN);
+        }
+        /*
+        if(jToggleActive.getText().equals("ATIVO")){
+            //jToggleActive.getText().equals("INATIVO")
+        }
+        */
+        helper.reverseUserActivation(usr);
+    }//GEN-LAST:event_jToggleActiveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -435,20 +478,21 @@ public class usuario extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(usuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(usuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(usuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(usuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new usuario(new DatabaseHelper(), new User()).setVisible(true);
+                new UserFrame(new DatabaseHelper(), new User()).setVisible(true);
             }
         });
     }
@@ -492,6 +536,7 @@ public class usuario extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldName;
     private javax.swing.JTextField jTextFieldNumber;
     private javax.swing.JTextField jTextFieldPassword;
+    private javax.swing.JToggleButton jToggleActive;
     // End of variables declaration//GEN-END:variables
     private User usr;
     private boolean isEditable;

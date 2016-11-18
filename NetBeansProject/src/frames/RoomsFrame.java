@@ -12,7 +12,7 @@ import roombooking.User;
  *
  * @author Jonathan
  */
-public class salas extends javax.swing.JFrame {
+public class RoomsFrame extends javax.swing.JFrame {
 
     private DatabaseHelper mDatabaseHelper;
     private User user;
@@ -22,7 +22,7 @@ public class salas extends javax.swing.JFrame {
     /**
      * Creates new form usuarios
      */
-    public salas(DatabaseHelper database, User user) {
+    public RoomsFrame(DatabaseHelper database, User user) {
         initComponents();
         this.mDatabaseHelper = database;
         this.user = user;
@@ -111,7 +111,7 @@ public class salas extends javax.swing.JFrame {
         // TODO add your handling code here:
         jButtonEditar.setText("Editar");
         jButtonCancelar.setVisible(false);
-        
+
         setJTableNotEditable(jTable1);
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
@@ -129,7 +129,7 @@ public class salas extends javax.swing.JFrame {
             setJTableRowEditable(jTable1, selectedRow);
 
         } else { // to save
-  /*          Room r = roomList.get(selectedRow);
+            /*          Room r = roomList.get(selectedRow);
 
             String roomID = (String) jTable1.getValueAt(selectedRow, 0);
             String roomTypeID;
@@ -159,7 +159,7 @@ public class salas extends javax.swing.JFrame {
                 
             }
             mDatabaseHelper.updateRoom(r.getRoomID(), r);
-    */        
+             */
             jButtonEditar.setText("Editar");
             jButtonCancelar.setVisible(false);
             setJTableNotEditable(jTable1);
@@ -175,14 +175,16 @@ public class salas extends javax.swing.JFrame {
         dtm.addColumn("COMPUTADORES");
 
         roomList.stream().forEach((room) -> {
-            dtm.addRow(new Object[]{
-                room.getRoomID(),
-                room.getRoomTypeDescription(),
-                room.getFloor(),
-                room.getCapacity(),
-                room.HasProjector() ? "SIM" : "NÃO",
-                room.getNumberOfComputers()
-            });
+            if (room.getActive() == 1 || user.getUserTypeID() == User.ADMIN) { // room is active
+                dtm.addRow(new Object[]{
+                    room.getRoomID(),
+                    room.getRoomTypeDescription(),
+                    room.getFloor(),
+                    room.getCapacity(),
+                    room.HasProjector() ? "SIM" : "NÃO",
+                    room.getNumberOfComputers()
+                });
+            }
         });
     }
 
@@ -209,7 +211,7 @@ public class salas extends javax.swing.JFrame {
     }
 
     private void jButtonInicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonInicioMouseClicked
-        new inicio(mDatabaseHelper, user).setVisible(true);
+        new StartFrame(mDatabaseHelper, user).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonInicioMouseClicked
 

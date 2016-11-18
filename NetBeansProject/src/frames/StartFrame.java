@@ -6,16 +6,19 @@ import roombooking.*;
  *
  * @author Jonathan
  */
-public class inicio extends javax.swing.JFrame {
+public class StartFrame extends javax.swing.JFrame {
+
+    private DatabaseHelper helper;
+    private User user;
 
     /**
      * Creates new form login
      */
-    public inicio(DatabaseHelper helper, User user) {
+    public StartFrame(DatabaseHelper helper, User user) {
         initComponents();
-        this. helper = helper;
+        this.helper = helper;
         this.user = user;
-        
+
     }
 
     /**
@@ -39,11 +42,15 @@ public class inicio extends javax.swing.JFrame {
         getContentPane().setLayout(null);
 
         jLabel_salas.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_salas.setText(" Salas");
+        jLabel_salas.setForeground(new java.awt.Color(188, 188, 188));
+        jLabel_salas.setText("  Salas");
         jLabel_salas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jLabel_salas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel_salasMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel_salasMousePressed(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jLabel_salasMouseReleased(evt);
@@ -53,9 +60,13 @@ public class inicio extends javax.swing.JFrame {
         jLabel_salas.setBounds(100, 110, 320, 170);
 
         jLabel_reserva.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_reserva.setText(" Adicionar reserva");
+        jLabel_reserva.setForeground(new java.awt.Color(188, 188, 188));
+        jLabel_reserva.setText("  Adicionar reserva");
         jLabel_reserva.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jLabel_reserva.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel_reservaMousePressed(evt);
+            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jLabel_reservaMouseReleased(evt);
             }
@@ -64,9 +75,13 @@ public class inicio extends javax.swing.JFrame {
         jLabel_reserva.setBounds(510, 110, 320, 170);
 
         jLabel_usuario.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_usuario.setText(" Usuário");
+        jLabel_usuario.setForeground(new java.awt.Color(188, 188, 188));
+        jLabel_usuario.setText("  Usuário");
         jLabel_usuario.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jLabel_usuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel_usuarioMousePressed(evt);
+            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 jLabel_usuarioMouseReleased(evt);
             }
@@ -75,11 +90,18 @@ public class inicio extends javax.swing.JFrame {
         jLabel_usuario.setBounds(100, 390, 320, 170);
 
         jLabel_Reservas.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel_Reservas.setText("Reservas");
+        jLabel_Reservas.setForeground(new java.awt.Color(188, 188, 188));
+        jLabel_Reservas.setText("  Reservas");
         jLabel_Reservas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jLabel_Reservas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel_ReservasMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel_ReservasMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel_ReservasMouseReleased(evt);
             }
         });
         getContentPane().add(jLabel_Reservas);
@@ -95,33 +117,64 @@ public class inicio extends javax.swing.JFrame {
 
     private void jLabel_salasMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_salasMouseReleased
         // TODO add your handling code here:
+        jLabel_salas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
     }//GEN-LAST:event_jLabel_salasMouseReleased
 
     private void jLabel_usuarioMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_usuarioMouseReleased
-        if(user.getUserTypeID() == User.ADMIN){
-            new usuarios(helper, user).setVisible(true);
-        }
-        else{
-            new usuario(helper, user, user).setVisible(true);
+        jLabel_usuario.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        if (user != null) {
+            if (user.getUserTypeID() == User.ADMIN) {
+                new UsersFrame(helper, user).setVisible(true);
+
+            }
+        } else {
+            new UserFrame(helper, user, user).setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_jLabel_usuarioMouseReleased
 
     private void jLabel_reservaMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_reservaMouseReleased
         // TODO add your handling code here:
-        new AddBooking(helper, user).setVisible(true);
+        jLabel_reserva.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        new AddBookingFrame(helper, user).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel_reservaMouseReleased
 
     private void jLabel_salasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_salasMouseClicked
-        new salas(helper, user).setVisible(true);
+        new RoomsFrame(helper, user).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel_salasMouseClicked
 
     private void jLabel_ReservasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_ReservasMouseClicked
-        new Bookings(helper, user).setVisible(true);
+        new BookingsFrame(helper, user).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel_ReservasMouseClicked
+
+    private void jLabel_reservaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_reservaMousePressed
+        //jLabel_Reservas.setBorder(border);
+        jLabel_reserva.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+    }//GEN-LAST:event_jLabel_reservaMousePressed
+
+    private void jLabel_ReservasMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_ReservasMousePressed
+        // TODO add your handling code here:
+        jLabel_Reservas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+    }//GEN-LAST:event_jLabel_ReservasMousePressed
+
+    private void jLabel_ReservasMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_ReservasMouseReleased
+        // TODO add your handling code here:
+        jLabel_Reservas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+    }//GEN-LAST:event_jLabel_ReservasMouseReleased
+
+    private void jLabel_salasMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_salasMousePressed
+        // TODO add your handling code here:
+        jLabel_salas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+    }//GEN-LAST:event_jLabel_salasMousePressed
+
+    private void jLabel_usuarioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel_usuarioMousePressed
+        // TODO add your handling code here:
+        jLabel_usuario.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+    }//GEN-LAST:event_jLabel_usuarioMousePressed
 
     /**
      * @param args the command line arguments
@@ -140,20 +193,21 @@ public class inicio extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(inicio.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(StartFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new inicio(null, null).setVisible(true);
+                new StartFrame(null, null).setVisible(true);
             }
         });
     }
@@ -165,6 +219,5 @@ public class inicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel_salas;
     private javax.swing.JLabel jLabel_usuario;
     // End of variables declaration//GEN-END:variables
-    private DatabaseHelper helper;
-    private User user;
+
 }

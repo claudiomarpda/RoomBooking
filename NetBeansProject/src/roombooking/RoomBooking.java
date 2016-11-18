@@ -145,7 +145,7 @@ public class RoomBooking {
         mDatabaseHelper.updateUserType(2, "Aluno");
         System.out.println(mDatabaseHelper.getUsersLike("an").toString());
          */
-        mDate();
+        //mDate();
         mDatabaseHelper.closeConnection();
     }
 

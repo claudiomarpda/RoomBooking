@@ -10,14 +10,14 @@ import roombooking.User;
  *
  * @author Jonathan
  */
-public class login extends javax.swing.JFrame {
+public class LoginFrame extends javax.swing.JFrame {
 
     private DatabaseHelper mDatabaseHelper;
 
     /**
      * Creates new form login
      */
-    public login() {
+    public LoginFrame() {
         mDatabaseHelper = new DatabaseHelper();
         initComponents();
         jFeedBackLabel.setVisible(false);
@@ -43,7 +43,6 @@ public class login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(932, 659));
-        setPreferredSize(new java.awt.Dimension(932, 659));
         setResizable(false);
         setSize(new java.awt.Dimension(932, 659));
         getContentPane().setLayout(null);
@@ -91,12 +90,13 @@ public class login extends javax.swing.JFrame {
         getContentPane().add(uf);
         uf.setBounds(330, 160, 290, 20);
 
+        jFeedBackLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jFeedBackLabel.setForeground(new java.awt.Color(255, 153, 153));
         jFeedBackLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jFeedBackLabel.setText("sdadsd");
         jFeedBackLabel.setToolTipText("");
         getContentPane().add(jFeedBackLabel);
-        jFeedBackLabel.setBounds(330, 460, 260, 16);
+        jFeedBackLabel.setBounds(330, 460, 260, 19);
 
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
         Background.setFocusable(false);
@@ -118,7 +118,7 @@ public class login extends javax.swing.JFrame {
     private void jLoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLoginButtonActionPerformed
 
         // Gets input from user.
-        final String loginInput = "20169";//jUserTextField.getText();
+        final String loginInput = "20161";//jUserTextField.getText();
         final String passwordInput = "123";//String.valueOf(jPasswordField.getPassword());
         
         // Checks if some input field is missing.
@@ -148,17 +148,17 @@ public class login extends javax.swing.JFrame {
                     user = mDatabaseHelper.getUserByCPF(loginInput);
                     startsInitialScreen(user);
                 } catch (KeyNotFoundException ex1) {
-                    Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex1);
+                    Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex1);
                     jFeedBackLabel.setVisible(true);
                     jFeedBackLabel.setText("Usuário ou senha inválidos.");
                 }
-                Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_jLoginButtonActionPerformed
 
     private void startsInitialScreen(User user) {
-        inicio mInicio = new inicio(mDatabaseHelper, user);
+        StartFrame mInicio = new StartFrame(mDatabaseHelper, user);
         this.dispose();
         mInicio.setVisible(true);
     }
@@ -184,20 +184,21 @@ public class login extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new login().setVisible(true);
+                new LoginFrame().setVisible(true);
             }
         });
     }

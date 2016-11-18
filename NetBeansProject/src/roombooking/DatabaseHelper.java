@@ -969,6 +969,14 @@ public final class DatabaseHelper {
         return list;
     }
 
+    /**
+     * Creates a Room according to resultSet.
+     *
+     * @param resultSet after one query statement executed, according to the
+     * calling method.
+     * @return a room
+     * @throws SQLException
+     */
     private Room getRoom(ResultSet resultSet) throws SQLException {
 
         if (!resultSet.next()) { // if the search has no result
@@ -995,6 +1003,12 @@ public final class DatabaseHelper {
         return room;
     }
 
+    /**
+     * Finds a room with a given ID
+     *
+     * @param roomID the id of the existent room.
+     * @return the room, if found
+     */
     public Room getRoomByID(String roomID) {
         Room room = null;
         try {

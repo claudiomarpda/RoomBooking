@@ -1,5 +1,6 @@
 package frames;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,8 +11,7 @@ import roombooking.DatabaseHelper;
 import roombooking.KeyNotFoundException;
 import roombooking.User;
 
-
-public class Bookings extends javax.swing.JFrame {
+public class BookingsFrame extends javax.swing.JFrame {
 
     private DatabaseHelper mDatabaseHelper;
     private User user;
@@ -21,16 +21,15 @@ public class Bookings extends javax.swing.JFrame {
     /**
      * Creates new form usuarios
      */
-    public Bookings(DatabaseHelper database, User user) {
+    public BookingsFrame(DatabaseHelper database, User user) {
         initComponents();
         this.mDatabaseHelper = database;
         this.user = user;
 
         bookingList = database.getAllBookings();
-        
+
         setJTableNotEditable(jTable1, dtm);
         //setValuesToTableModel(dtm);
-        
 
         jButtonCancelar.setVisible(false);
         if (user != null) {
@@ -112,8 +111,8 @@ public class Bookings extends javax.swing.JFrame {
         // TODO add your handling code here:
         jButtonEditar.setText("Editar");
         jButtonCancelar.setVisible(false);
-        
-       // setJTableNotEditable(jTable1);
+
+        // setJTableNotEditable(jTable1);
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
@@ -127,11 +126,9 @@ public class Bookings extends javax.swing.JFrame {
             jButtonEditar.setText("Salvar");
             jButtonCancelar.setVisible(true);
 
-           // setJTableRowEditable(jTable1, selectedRow);
-
+            // setJTableRowEditable(jTable1, selectedRow);
         } else { // to save
-  
-           
+
             jButtonEditar.setText("Editar");
             jButtonCancelar.setVisible(false);
             //setJTableNotEditable(jTable1);
@@ -146,27 +143,30 @@ public class Bookings extends javax.swing.JFrame {
         dtm.addColumn("PESSOAS");
         dtm.addColumn("HORÁRIO");
         java.text.SimpleDateFormat sdf
-                 = new java.text.SimpleDateFormat("dd-MM-yyyy kk:mm");
-        
-        
+                = new java.text.SimpleDateFormat("dd-MM-yyyy kk:mm");
+
         bookingList.stream().forEach((booking) -> {
             try {
-                dtm.addRow(new Object[]{
-                    booking.getBookingID(),
-                    mDatabaseHelper.getUserByID(booking.getUserID()).getName(),
-                    mDatabaseHelper.getRoomByID(booking.getRoomID()).getRoomID(),
-                    booking.getGoal(),
-                    booking.getNumberOfPeople(),
-                    sdf.format(booking.getTimeStamp())
-                });
+                Timestamp ts = booking.getTimeStamp();
+                if (ts != null) {
+                    String dateTime = sdf.format(ts);
+                    dtm.addRow(new Object[]{
+                        booking.getBookingID(),
+                        mDatabaseHelper.getUserByID(booking.getUserID()).getName(),
+                        mDatabaseHelper.getRoomByID(booking.getRoomID()).getRoomID(),
+                        booking.getGoal(),
+                        booking.getNumberOfPeople(),
+                        sdf.format(booking.getTimeStamp())
+                    });
+                }
             } catch (KeyNotFoundException ex) {
-                Logger.getLogger(Bookings.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(BookingsFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
 
     private void setJTableNotEditable(JTable jTable, DefaultTableModel dtm) {
-            dtm = new DefaultTableModel() {
+        dtm = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -177,14 +177,14 @@ public class Bookings extends javax.swing.JFrame {
     }
 
     private void jButtonInicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonInicioMouseClicked
-        new inicio(mDatabaseHelper, user).setVisible(true);
+        new StartFrame(mDatabaseHelper, user).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonInicioMouseClicked
-    
+
     public static void main(String[] args) {
-        new Bookings(new DatabaseHelper(), new User()).setVisible(true);
+        new BookingsFrame(new DatabaseHelper(), new User()).setVisible(true);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Background;
     private javax.swing.JButton jButtonCancelar;

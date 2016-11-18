@@ -19,7 +19,7 @@ import roombooking.*;
  *
  * @author Jonathan
  */
-public class AddBooking extends javax.swing.JFrame {
+public class AddBookingFrame extends javax.swing.JFrame {
 
     private DatabaseHelper mDatabaseHelper;
     private User user;
@@ -29,7 +29,7 @@ public class AddBooking extends javax.swing.JFrame {
     /**
      * Creates new form for Booking
      */
-    public AddBooking(DatabaseHelper database, User user) {
+    public AddBookingFrame(DatabaseHelper database, User user) {
         mDatabaseHelper = database;
         this.user = user;
         String[] types = {Room.AUDITORIO, Room.LABORATORIO, Room.PROFESSOR, Room.REUNIAO};
@@ -80,22 +80,27 @@ public class AddBooking extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(932, 659));
         getContentPane().setLayout(null);
 
+        jLabelSala.setForeground(new java.awt.Color(255, 255, 255));
         jLabelSala.setText("Sala");
         getContentPane().add(jLabelSala);
         jLabelSala.setBounds(70, 230, 25, 16);
 
+        jLabelObjetivo.setForeground(new java.awt.Color(255, 255, 255));
         jLabelObjetivo.setText("Objetivo");
         getContentPane().add(jLabelObjetivo);
         jLabelObjetivo.setBounds(70, 280, 46, 16);
 
+        jLabelData.setForeground(new java.awt.Color(255, 255, 255));
         jLabelData.setText("Data");
         getContentPane().add(jLabelData);
         jLabelData.setBounds(70, 400, 26, 16);
 
+        jLabelHora.setForeground(new java.awt.Color(255, 255, 255));
         jLabelHora.setText("Hora");
         getContentPane().add(jLabelHora);
         jLabelHora.setBounds(180, 400, 27, 16);
 
+        jLabelDemanda.setForeground(new java.awt.Color(255, 255, 255));
         jLabelDemanda.setText("Demanda");
         jLabelDemanda.setToolTipText("Quantidade de pessoas a ocupar a sala.");
         getContentPane().add(jLabelDemanda);
@@ -140,6 +145,7 @@ public class AddBooking extends javax.swing.JFrame {
         getContentPane().add(jCBRoomType);
         jCBRoomType.setBounds(170, 170, 150, 26);
 
+        jLabelTipoDeSala.setForeground(new java.awt.Color(255, 255, 255));
         jLabelTipoDeSala.setText("Tipo de sala");
         getContentPane().add(jLabelTipoDeSala);
         jLabelTipoDeSala.setBounds(70, 170, 70, 16);
@@ -162,9 +168,11 @@ public class AddBooking extends javax.swing.JFrame {
         getContentPane().add(jButtonInicio);
         jButtonInicio.setBounds(70, 50, 60, 32);
 
+        jLabelFeedBack.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabelFeedBack.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelFeedBack.setText("Feedback");
         getContentPane().add(jLabelFeedBack);
-        jLabelFeedBack.setBounds(400, 580, 230, 16);
+        jLabelFeedBack.setBounds(240, 580, 440, 19);
 
         Background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/base-00.png"))); // NOI18N
         getContentPane().add(Background);
@@ -210,7 +218,7 @@ public class AddBooking extends javax.swing.JFrame {
                         mTimestamp
                 );
             } catch (KeyExistsException ex) {
-                Logger.getLogger(AddBooking.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AddBookingFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             jLabelFeedBack.setText("Reserva casastrada");
@@ -243,6 +251,9 @@ public class AddBooking extends javax.swing.JFrame {
     }
 
     private Timestamp getTimestamp(String dateString, String timeString) {
+        if(timeString.equals("HH:mm")){
+            return null;
+        }
         java.text.SimpleDateFormat sdf
                 = new java.text.SimpleDateFormat("dd/MM/yyyy kk:mm");
         java.util.Date javaDate = null;
@@ -307,7 +318,7 @@ public class AddBooking extends javax.swing.JFrame {
 
     private void jButtonInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInicioActionPerformed
         // TODO add your handling code here:
-        new inicio(mDatabaseHelper, user).setVisible(true);
+        new StartFrame(mDatabaseHelper, user).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButtonInicioActionPerformed
 
