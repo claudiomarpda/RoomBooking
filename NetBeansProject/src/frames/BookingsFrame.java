@@ -144,7 +144,10 @@ public class BookingsFrame extends javax.swing.JFrame {
         dtm.addColumn("HORÁRIO");
         java.text.SimpleDateFormat sdf
                 = new java.text.SimpleDateFormat("dd-MM-yyyy kk:mm");
-
+        
+        if(bookingList == null){
+            return;
+        }
         bookingList.stream().forEach((booking) -> {
             try {
                 Timestamp ts = booking.getTimeStamp();

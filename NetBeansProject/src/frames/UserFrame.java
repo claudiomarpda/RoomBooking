@@ -30,6 +30,7 @@ public class UserFrame extends javax.swing.JFrame {
         edit();
         this.helper = helper;
         this.currentUser = currentUser;
+        jToggleActiveInitialize();
     }
 
     /**
@@ -44,21 +45,9 @@ public class UserFrame extends javax.swing.JFrame {
         this.usr = usr;
         this.helper = helper;
         this.currentUser = currentUser;
-        
-        if(usr != null && currentUser != null){
-            if(currentUser.getUserTypeID() == User.ADMIN){
-                jToggleActive.setVisible(true);
-            }
-            
-            jToggleActive.setVisible(true);
-            if (usr.getActive() == 1) { // user is active
-                jToggleActive.doClick();
-            }
-        }
-        else{
-            jToggleActive.setVisible(false);
-        }
-        
+
+        jToggleActiveInitialize();
+
         jTextFieldId_user.setText(usr.getUserID());
         jTextFieldCpf.setText(usr.getCpf());
         jTextFieldName.setText(usr.getName());
@@ -91,6 +80,27 @@ public class UserFrame extends javax.swing.JFrame {
             jRadioButtonF.setSelected(true);
             jRadioButtonM.setSelected(false);
         }
+    }
+
+    private void jToggleActiveInitialize() {
+
+        if (usr != null && currentUser != null) {
+            if (currentUser.getUserTypeID() == User.ADMIN) {
+                jToggleActive.setVisible(true);
+            } else {
+                jToggleActive.setVisible(false);
+            }
+            if (usr.getActive() == 1) { // user is active
+                jToggleActive.setSelected(true);
+                jToggleActive.setText("ATIVO");
+                jToggleActive.setForeground(Color.CYAN);
+            } else {
+                jToggleActive.setText("INATIVO");
+                jToggleActive.setSelected(false);
+                jToggleActive.setForeground(Color.RED);
+            }
+        }
+
     }
 
     private void edit() {
@@ -343,7 +353,7 @@ public class UserFrame extends javax.swing.JFrame {
         getContentPane().add(jButtonEditar);
         jButtonEditar.setBounds(760, 580, 80, 30);
 
-        jToggleActive.setText("Ativo");
+        jToggleActive.setText("INATIVO");
         jToggleActive.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleActiveActionPerformed(evt);
@@ -364,7 +374,7 @@ public class UserFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int userTypeID;
         String gender;
-        
+
         // TODO verify all inputTextField
         if (jTextFieldId_user.getText().equals("") || jTextFieldCpf.equals("")) {
             return;
@@ -405,7 +415,7 @@ public class UserFrame extends javax.swing.JFrame {
                 usr = null;
                 resetInputFields();
 
-                jLabelWarning.setForeground(Color.GREEN);
+                jLabelWarning.setForeground(Color.CYAN);
                 jLabelWarning.setText("Usuário adicionado com sucesso.");
             } catch (KeyExistsException ex) {
                 Logger.getLogger(UserFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -445,20 +455,22 @@ public class UserFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonInicioActionPerformed
 
     private void jToggleActiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleActiveActionPerformed
-        if(jToggleActive.getModel().isPressed()){
+
+        if (usr.getUserTypeID() == User.ADMIN) {
+            jToggleActive.setSelected(true);
+            return;
+        }
+
+        if (jToggleActive.getText().equals("ATIVO")) {
             jToggleActive.setText("INATIVO");
             jToggleActive.setForeground(Color.RED);
-        }
-        else{
+        } else {
             jToggleActive.setText("ATIVO");
-            jToggleActive.setForeground(Color.GREEN);
+            jToggleActive.setForeground(Color.CYAN);
         }
-        /*
-        if(jToggleActive.getText().equals("ATIVO")){
-            //jToggleActive.getText().equals("INATIVO")
-        }
-        */
+
         helper.reverseUserActivation(usr);
+
     }//GEN-LAST:event_jToggleActiveActionPerformed
 
     /**
@@ -498,7 +510,7 @@ public class UserFrame extends javax.swing.JFrame {
     }
 
     private void resetInputFields() {
-        
+
         jTextFieldId_user.setText(null);
         jTextFieldCpf.setText(null);
         jTextFieldName.setText(null);
@@ -542,6 +554,5 @@ public class UserFrame extends javax.swing.JFrame {
     private boolean isEditable;
     private DatabaseHelper helper;
     private User currentUser;
-    
 
 }

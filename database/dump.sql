@@ -34,7 +34,7 @@ CREATE TABLE `booking` (
   KEY `user_fk_idx` (`user`),
   CONSTRAINT `room_fk` FOREIGN KEY (`room`) REFERENCES `room` (`id_room`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `user_fk` FOREIGN KEY (`user`) REFERENCES `user` (`id_user`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,6 @@ CREATE TABLE `booking` (
 
 LOCK TABLES `booking` WRITE;
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
-INSERT INTO `booking` VALUES (1,'20163','LAB-101','Monitoria Banco de Dados I',10,'2017-12-20 07:00:00');
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -68,7 +67,7 @@ CREATE TABLE `email` (
 
 LOCK TABLES `email` WRITE;
 /*!40000 ALTER TABLE `email` DISABLE KEYS */;
-INSERT INTO `email` VALUES ('99999999999','admin@gmail.com'),('119','jonathan@gmail.com'),('112','rod@gmail.com');
+INSERT INTO `email` VALUES ('22222222222','v@ci.ufpb.com'),('11111111111','jonathan@ci.ufpb.br'),('999999999','admin@ci.ufpb.br');
 /*!40000 ALTER TABLE `email` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +91,7 @@ CREATE TABLE `floor` (
 
 LOCK TABLES `floor` WRITE;
 /*!40000 ALTER TABLE `floor` DISABLE KEYS */;
-INSERT INTO `floor` VALUES (1,'Primeiro andar');
+INSERT INTO `floor` VALUES (0,'Subsolo'),(1,'Térreo'),(2,'Primeiro andar'),(3,'Segundo andar'),(4,'Terceiro andar');
 /*!40000 ALTER TABLE `floor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +117,7 @@ CREATE TABLE `person` (
 
 LOCK TABLES `person` WRITE;
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` VALUES ('11111111111','Thiago Maritan Ugulino Araújo','M','1980-01-01'),('112','Rodrigo','M','2000-01-01'),('119','Jonathan','M','1994-01-01'),('99999999999','Administrador','M','2000-01-01');
+INSERT INTO `person` VALUES ('11111111111','Jonathan Rodrigues','M','1995-01-01'),('22222222222','Valéria Soares','F','1980-01-01'),('999999999','Administrador','M','2000-01-01');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,7 +142,7 @@ CREATE TABLE `phone` (
 
 LOCK TABLES `phone` WRITE;
 /*!40000 ALTER TABLE `phone` DISABLE KEYS */;
-INSERT INTO `phone` VALUES ('99999999999','083 9 9999-9999'),('119','083 9 2222-1111'),('112','083 9 9999-9999');
+INSERT INTO `phone` VALUES ('22222222222','083 9 9999-9999'),('11111111111','083 9 9999-9999'),('999999999','083 9 0000-0000');
 /*!40000 ALTER TABLE `phone` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +175,7 @@ CREATE TABLE `room` (
 
 LOCK TABLES `room` WRITE;
 /*!40000 ALTER TABLE `room` DISABLE KEYS */;
-INSERT INTO `room` VALUES ('AUD-001','AUD',1,99,1,0,NULL),('LAB-101','LAB',1,60,1,30,NULL),('LAB-102','LAB',1,60,1,0,1);
+INSERT INTO `room` VALUES ('CI101','LAB',2,60,1,30,1),('CI102','AUL',2,50,1,0,1),('CI103','AUL',2,50,1,0,1),('CI104','AUL',2,50,1,0,1),('CI105','LAB',2,60,1,30,1),('CI106','LAB',2,60,1,30,1),('SB01','AUL',0,60,1,0,1),('T05','AUL',1,60,0,0,1),('T06','AUD',1,60,0,0,1),('T07','LAB',1,60,1,30,1);
 /*!40000 ALTER TABLE `room` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +199,7 @@ CREATE TABLE `room_type` (
 
 LOCK TABLES `room_type` WRITE;
 /*!40000 ALTER TABLE `room_type` DISABLE KEYS */;
-INSERT INTO `room_type` VALUES ('AUD','Auditório'),('LAB','Laboratório');
+INSERT INTO `room_type` VALUES ('AUD','Auditório'),('AUL','Sala de Aula'),('LAB','Laboratório'),('PROF','Sala de Professor');
 /*!40000 ALTER TABLE `room_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +228,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('2016000000','11111111111',1,'123',NULL),('20162','112',2,'123',1),('20163','119',2,'123',0),('20169','99999999999',2,'123',NULL);
+INSERT INTO `user` VALUES ('2016000001','22222222222',1,'123',1),('2016000002','11111111111',2,'123',1),('2016999999','999999999',3,'123',1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -253,7 +252,7 @@ CREATE TABLE `user_type` (
 
 LOCK TABLES `user_type` WRITE;
 /*!40000 ALTER TABLE `user_type` DISABLE KEYS */;
-INSERT INTO `user_type` VALUES (1,'Professor'),(2,'Aluno');
+INSERT INTO `user_type` VALUES (1,'Professor'),(2,'Aluno'),(3,'Administrador');
 /*!40000 ALTER TABLE `user_type` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -266,4 +265,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-11-15 22:26:08
+-- Dump completed on 2016-11-18 11:16:37

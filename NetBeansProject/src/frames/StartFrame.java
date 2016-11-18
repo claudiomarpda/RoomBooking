@@ -127,9 +127,12 @@ public class StartFrame extends javax.swing.JFrame {
             if (user.getUserTypeID() == User.ADMIN) {
                 new UsersFrame(helper, user).setVisible(true);
 
+            } else {
+                new UserFrame(helper, user, user).setVisible(true);
             }
-        } else {
-            new UserFrame(helper, user, user).setVisible(true);
+        }
+        else{
+            System.out.println("nuloooooooo");
         }
         this.dispose();
     }//GEN-LAST:event_jLabel_usuarioMouseReleased

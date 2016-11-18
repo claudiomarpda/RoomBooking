@@ -21,6 +21,7 @@ public class RoomBooking {
         //mDatabaseHelper.addPerson("33333333333", "Jonathan", 'M', "1994-01-01");
         //mDatabaseHelper.addEmail("11111111111", "th@email.com");
         //mDatabaseHelper.addPhone("11111111111", "+55 083 91111-2222");
+        //mDatabaseHelper.addFloor(0, "SUBSOLO");
         //mDatabaseHelper.addFloor(0, "Térreo");
         //mDatabaseHelper.addFloor(2, "Segundo andar");
         //mDatabaseHelper.addFloor(3, "Terceiro andar");
@@ -30,7 +31,22 @@ public class RoomBooking {
         //mDatabaseHelper.addUser("2015000000", "22222222222", 2);
         // mDatabaseHelper.addUser("20163", "112", 2, "jonathan@gmail.com", 
         //    "083 9 2222-1111", "Jonathan", 'M', "1994-01-01", "123");
-        //mDatabaseHelper.addRoom("LAB-102", "LAB", 1, 60, 0, 30);
+        //mDatabaseHelper.addRoom("SB01", "AUL", 0, 60, 1, 0, 1);
+        //mDatabaseHelper.addRoom("T05", "AUL", 1, 60, 0, 0, 1);
+        //mDatabaseHelper.addRoom("T06", "AUD", 1, 60, 0, 0, 1);
+        //mDatabaseHelper.addRoom("T07", "LAB", 1, 60, 1, 30, 1);
+//        mDatabaseHelper.addRoom("CI106", "LAB", 2, 60, 1, 30, 1);
+//        mDatabaseHelper.addRoom("CI105", "LAB", 2, 60, 1, 30, 1);
+//        mDatabaseHelper.addRoom("CI101", "LAB", 2, 60, 1, 30, 1);
+//        mDatabaseHelper.addRoom("CI102", "AUL", 2, 50, 1, 0, 1);
+//        mDatabaseHelper.addRoom("CI103", "AUL", 2, 50, 1, 0, 1);
+//        mDatabaseHelper.addRoom("CI104", "AUL", 2, 50, 1, 0, 1);
+        
+        //mDatabaseHelper.addUser("2016000001", "22222222222", 1, "v@ci.ufpb.com", "083 9 9999-9999", "Valéria Soares", 'F', "1980-01-01", "123", 1);
+        //mDatabaseHelper.addUser("2016000002", "11111111111", 2, "jonathan@ci.ufpb.br", "083 9 9999-9999", "Jonathan Rodrigues", 'M', "1995-01-01", "123", 1);
+        //mDatabaseHelper.addUser("2016999999", "999999999", 3, "admin@ci.ufpb.br", "083 9 0000-0000", "Administrador", 'M', "2000-01-01", "123", 1);
+        //String roomID, String roomType, int floorID, int capacity, int hasProjector, int numberOfComputers, int active)
+        
         // mDatabaseHelper.removePerson("22222222222");
         //mDatabaseHelper.addBooking("20163", "LAB-101", "Monitoria Banco de Dados I", 10, "2016-11-01 08:00 AM");
         //mDatabaseHelper.removePerson("22222222222");

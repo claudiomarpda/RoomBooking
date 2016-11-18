@@ -20,7 +20,7 @@ public class UsersFrame extends javax.swing.JFrame {
      */
     public UsersFrame(DatabaseHelper helper, User currentUser) {
         initComponents();
-
+        this.currentUser = currentUser;
         this.helper = helper;
         users = helper.getAllUsers();
 
@@ -221,7 +221,7 @@ public class UsersFrame extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextFieldFiltro;
     // End of variables declaration//GEN-END:variables
-    DatabaseHelper helper;
-    ArrayList<User> users;
-    User currentUser;
+    private DatabaseHelper helper;
+    private ArrayList<User> users;
+    private User currentUser;
 }

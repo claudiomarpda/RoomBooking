@@ -382,7 +382,7 @@
     </Component>
     <Component class="javax.swing.JToggleButton" name="jToggleActive">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ativo"/>
+        <Property name="text" type="java.lang.String" value="INATIVO"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleActiveActionPerformed"/>
