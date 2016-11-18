@@ -13,6 +13,8 @@ public class Room {
     public static final String REUNIAO_ID = "REU";
     public static final String LABORATORIO = "Laboratório";
     public static final String LABORATORIO_ID = "LAB";
+    public static final String AULA = "Aula";
+    public static final String AULA_ID = "AUL";
 
     private int floorID;
     private String floor;

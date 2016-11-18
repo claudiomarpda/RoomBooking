@@ -118,8 +118,8 @@ public class LoginFrame extends javax.swing.JFrame {
     private void jLoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLoginButtonActionPerformed
 
         // Gets input from user.
-        final String loginInput = "2016999999";//jUserTextField.getText();
-        final String passwordInput = "123";//String.valueOf(jPasswordField.getPassword());
+        final String loginInput = jUserTextField.getText();
+        final String passwordInput = String.valueOf(jPasswordField.getPassword());
         
         // Checks if some input field is missing.
         if (loginInput.equals("") || passwordInput.equals("")) {

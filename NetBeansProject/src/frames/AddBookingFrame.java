@@ -32,7 +32,7 @@ public class AddBookingFrame extends javax.swing.JFrame {
     public AddBookingFrame(DatabaseHelper database, User user) {
         mDatabaseHelper = database;
         this.user = user;
-        String[] types = {Room.AUDITORIO, Room.LABORATORIO, Room.PROFESSOR, Room.REUNIAO};
+        String[] types = {Room.AUDITORIO, Room.LABORATORIO, Room.PROFESSOR, Room.REUNIAO, Room.AULA};
         allRooms = mDatabaseHelper.getAllRooms();
 
         initComponents();
@@ -188,6 +188,8 @@ public class AddBookingFrame extends javax.swing.JFrame {
         if (jButtonSalvar.getText().equals("Salvar")) {
             saveBookingButton();
         } else {
+            resetAllInputs();
+
             jButtonSalvar.setText("Salvar");
         }
 
@@ -224,7 +226,7 @@ public class AddBookingFrame extends javax.swing.JFrame {
             jLabelFeedBack.setText("Reserva casastrada");
             jLabelFeedBack.setForeground(Color.GREEN);
 
-            resetAllInputs();
+            //resetAllInputs();
             jButtonSalvar.setText("Nova");
 
         } else {
@@ -245,13 +247,16 @@ public class AddBookingFrame extends javax.swing.JFrame {
     }
 
     private void resetAllInputs() {
-        //updateCBRoom(jCBRoom, allRooms);
+        jTextPaneObjetivo.setText("");
+        jLabelData.setText("");
+        jLabelHora.setText("");
+        jSpinnerDemanda.resetKeyboardActions();
         jCBRoom.setSelectedIndex(0);
         jCBRoomType.setSelectedIndex(0);
     }
 
     private Timestamp getTimestamp(String dateString, String timeString) {
-        if(timeString.equals("HH:mm")){
+        if (timeString.equals("HH:mm")) {
             return null;
         }
         java.text.SimpleDateFormat sdf
@@ -299,6 +304,9 @@ public class AddBookingFrame extends javax.swing.JFrame {
                 break;
             case 4:
                 currentList = mDatabaseHelper.getAllRoomsByType(Room.REUNIAO_ID);
+                break;
+            case 5:
+                currentList = mDatabaseHelper.getAllRoomsByType(Room.AULA_ID);
                 break;
             default:
                 currentList = allRooms;
