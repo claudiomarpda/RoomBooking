@@ -8,3 +8,21 @@ It was developed as a project for a Database Systems course, therefore it provid
 The back-end provides more functionality than the front-end shows because of some requirements we got for the user interface.
 
 Keywords: Java, MySQL, PreparedStatement, JFrame, CRUD, Database, ER Model, Table Normalization.
+
+Database:</br>
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/database/design/tables1.jpg)
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/database/design/tables2.jpg)
+
+Interface screens:</br>
+
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/1login.jpg)
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/2main.jpg)
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/3createuseer.jpg)
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/4user.jpg)
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/5users.jpg)
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/6rooms.jpg)
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/7bookings.jpg)
+![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/8addbooking.jpg)
+
+
+
