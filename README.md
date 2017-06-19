@@ -1,4 +1,4 @@
-# RoomBooking </br>
+# RoomBooking
 
 Language: Java </br>
 Database: MySQL </br>
@@ -9,11 +9,12 @@ The back-end provides more functionality than the front-end shows because of som
 
 Keywords: Java, MySQL, PreparedStatement, JFrame, CRUD, Database, ER Model, Table Normalization.
 
-Database:</br>
+<h2>Database Design</h2>
+
 ![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/database/design/tables1.jpg)
 ![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/database/design/tables2.jpg)
 
-Interface screens:</br>
+<h2>User Interfaces</h2>
 
 ![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/1login.jpg)
 ![alt tag](https://github.com/claudiomarpda/RoomBooking/blob/master/interface_screen/2main.jpg)
